@@ -4,184 +4,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor de Internet | Speedometer Pro</title>
+    <title>Speedtest Nautiluz</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
         :root {
-            --bg-dark: #070b14;
-            --panel-bg: #111827;
-            --panel-border: #1f2937;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent-blue: #3b82f6;
-            --glow-blue: rgba(59, 130, 246, 0.5);
+            --bg-base: #09090b;
+            --bg-panel: #181b21;
+            --bg-panel-hover: #22262e;
+            --border: #272a33;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
             --good: #10b981;
             --warn: #f59e0b;
             --fail: #ef4444;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-base);
             color: var(--text-main);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-dark) 50%);
+            background-image: radial-gradient(circle at 50% -20%, #1e1b4b 0%, var(--bg-base) 60%);
         }
 
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
+        /* ----- HEADER ----- */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--panel-bg);
-            padding: 20px 30px;
-            border-radius: 16px;
-            border: 1px solid var(--panel-border);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h1 span {
-            color: var(--accent-blue);
-        }
-
-        /* Semáforo Top */
-        .traffic-light {
-            display: flex;
-            gap: 12px;
-            background: #000;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid #333;
-        }
-
-        .light {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #333;
-            transition: all 0.3s;
-        }
-
-        .light.red.active {
-            background: var(--fail);
-            box-shadow: 0 0 15px var(--fail);
-        }
-
-        .light.yellow.active {
-            background: var(--warn);
-            box-shadow: 0 0 15px var(--warn);
-        }
-
-        .light.green.active {
-            background: var(--good);
-            box-shadow: 0 0 15px var(--good);
-        }
-
-        /* Configuración de Prueba */
-        .test-config {
-            display: flex;
-            gap: 15px;
-            background: var(--panel-bg);
+            background: rgba(24, 27, 33, 0.6);
+            backdrop-filter: blur(12px);
             padding: 15px 25px;
-            border-radius: 12px;
-            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand span {
+            color: var(--accent);
+        }
+
+        .settings-bar {
+            display: flex;
+            gap: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .test-config label {
+        .settings-bar label {
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 500;
         }
 
-        .test-config select {
-            background: #1f2937;
-            color: white;
-            border: 1px solid #374151;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-family: 'Inter';
+        select,
+        .btn {
+            background: #0f1115;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
             outline: none;
-            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        /* Provider Info */
-        .provider-info {
+        select:focus {
+            border-color: var(--accent);
+        }
+
+        .header-info {
             display: flex;
-            gap: 20px;
-            font-size: 0.9rem;
+            gap: 15px;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .provider-item span {
-            color: #fff;
-            font-weight: bold;
-            font-family: 'JetBrains Mono';
+        .header-info span {
+            color: var(--text-main);
         }
 
-        /* Main Dashboard Area */
+        /* ----- GRID LAYOUT ----- */
         .dashboard {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: minmax(300px, 1fr) 350px;
             gap: 20px;
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 850px) {
             .dashboard {
                 grid-template-columns: 1fr;
-            }
-
-            .provider-info {
-                margin-left: 0;
-                width: 100%;
-                justify-content: space-between;
             }
         }
 
         .panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 16px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
         }
 
-        /* Tacómetro / Speedometer */
-        .tachometer-wrapper {
+        /* ----- TACHOMETER ----- */
+        .tachometer-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px 0;
             position: relative;
-            padding: 20px 0 0 0;
         }
 
         .speed-svg {
@@ -190,19 +164,19 @@
             overflow: visible;
         }
 
+        /* Smooth needle animation with CSS transform on SVG elements */
         .needle {
-            transform-origin: 100px 100px;
-            transform: rotate(-90deg);
-            transition: transform 0.1s ease-out;
+            transform-origin: 100px 110px;
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .speed-progress {
-            transition: stroke-dashoffset 0.1s ease-out;
+            transition: stroke-dashoffset 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .speed-text-center {
+        .speed-center-text {
             position: absolute;
-            top: 55%;
+            top: 60%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
@@ -210,396 +184,480 @@
 
         .speed-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 20px var(--glow-blue);
             line-height: 1;
+            background: linear-gradient(180deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .speed-unit {
             font-size: 1rem;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-
-        .test-type-indicator {
-            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 5px;
-            text-transform: uppercase;
+            font-weight: 600;
             letter-spacing: 1px;
-            font-weight: 800;
+            margin-top: 5px;
         }
 
-        .test-type-indicator.download {
-            color: #38bdf8;
+        .indicator-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            text-transform: uppercase;
         }
 
-        .test-type-indicator.upload {
-            color: #c084fc;
+        /* ----- PRIMARY STATS ----- */
+        .primary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        /* Estadísticas Adicionales Jitter etc */
-        .advanced-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: -10px;
-            margin-bottom: 20px;
+        @media (max-width: 500px) {
+            .primary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .adv-stat {
+        .stat-box {
+            background: #0f1115;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 15px;
             text-align: center;
         }
 
-        .adv-stat-label {
+        .stat-label {
             font-size: 0.75rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
-        .adv-stat-val {
-            font-family: 'JetBrains Mono';
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
+        .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
         }
 
-        /* Ping Stats Side */
-        .ping-stats {
+        /* ----- AI COPILOT ----- */
+        .copilot-card {
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 0;
+            position: relative;
+        }
+
+        .copilot-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: #818cf8;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .copilot-header svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .copilot-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        /* ----- APP OPTIMIZATIONS ----- */
+        .apps-list {
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-        }
-
-        .ping-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 12px 15px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ping-card-info h4 {
-            margin: 0 0 5px 0;
-            font-size: 0.9rem;
-            color: #fff;
-        }
-
-        .ping-card-info p {
-            margin: 0;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .ping-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--good);
-        }
-
-        .ping-value.bad {
-            color: var(--fail);
-        }
-
-        .ping-value.warn {
-            color: var(--warn);
-        }
-
-        .ping-value.pending {
-            color: var(--text-muted);
-        }
-
-        /* Botones */
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            flex: 1;
-            max-width: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             gap: 10px;
         }
 
-        .btn:hover {
+        .app-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #0f1115;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .app-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            transition: all 0.3s;
+        }
+
+        .status-dot.green {
+            background: var(--good);
+            box-shadow: 0 0 8px var(--good);
+        }
+
+        .status-dot.yellow {
+            background: var(--warn);
+            box-shadow: 0 0 8px var(--warn);
+        }
+
+        .status-dot.red {
+            background: var(--fail);
+            box-shadow: 0 0 8px var(--fail);
+        }
+
+        /* ----- HYBRID PING TEST ----- */
+        .hybrid-pings {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .hybrid-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: #0f1115;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .hybrid-item span.val {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* ----- CONTROLS ----- */
+        .main-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main-btn:hover:not(:disabled) {
             background: #2563eb;
             transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 8px 20px var(--accent-glow);
         }
 
-        .btn-dl {
-            background: #10b981;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-            flex: none;
-            width: auto;
+        .main-btn:disabled {
+            background: #1e293b;
+            color: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .btn-dl:hover {
-            background: #059669;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+        .main-btn.stop {
+            background: var(--fail);
         }
 
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-block;
+        .main-btn.stop:hover {
+            background: #dc2626;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
         }
 
-        .badge-good {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--good);
-        }
-
-        .badge-warn {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--warn);
-        }
-
-        .badge-fail {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--fail);
-        }
-
-        .app-status {
-            text-align: center;
+        /* ----- TABLE ----- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
             margin-top: 10px;
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            min-height: 24px;
         }
 
-        /* Modal Info Data */
-        .process-log {
-            margin-top: 20px;
-            background: #000;
-            border-radius: 8px;
-            padding: 15px;
-            font-family: 'JetBrains Mono';
-            font-size: 0.8rem;
-            color: #a3be8c;
-            height: 120px;
-            overflow-y: auto;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 600px;
+        }
+
+        th,
+        td {
             text-align: left;
-            border: 1px solid #333;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .log-line {
-            margin: 5px 0;
-            border-bottom: 1px solid #111;
-            padding-bottom: 5px;
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
-        .log-time {
-            color: #888;
-            margin-right: 10px;
+        td {
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container">
         <div class="header">
-            <h1>📡 <span>Velocity</span>Monitor</h1>
-
-            <div class="test-config">
-                <label for="test-duration">Duración del Test:</label>
-                <select id="test-duration">
-                    <option value="5">Rápido (5 seg)</option>
-                    <option value="10" selected>Normal (10 seg)</option>
-                    <option value="20">Preciso (20 seg)</option>
-                </select>
+            <div class="brand">
+                <h1>📡 Speedtest <span>Nautiluz</span></h1>
             </div>
 
-            <div class="traffic-light" title="Estado de Completitud de Prueba">
-                <div class="light red" id="light-red"></div>
-                <div class="light yellow" id="light-yellow"></div>
-                <div class="light green" id="light-green"></div>
+            <div class="header-info">
+                <div>IP: <span id="user-ip">...</span></div>
+                <div>ISP: <span id="user-isp">...</span></div>
+            </div>
+
+            <div class="settings-bar">
+                <label for="test-mode">Ciclo de Prueba:</label>
+                <select id="test-mode">
+                    <option value="manual">Manual (Una vez)</option>
+                    <option value="30">Bucle cada 30 Segundos</option>
+                    <option value="60">Bucle cada 1 Minuto</option>
+                    <option value="300">Bucle cada 5 Minutos</option>
+                </select>
             </div>
         </div>
 
         <div class="dashboard">
-            <!-- Velocímetro Central -->
-            <div class="panel"
-                style="grid-column: 1 / -1; display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+            <!-- COLUMNA IZQUIERDA: Medidor Principal -->
+            <div class="panel">
+                <div class="tachometer-container">
+                    <svg viewBox="0 0 200 130" class="speed-svg" id="tach-svg">
+                        <defs>
+                            <linearGradient id="gradSpeed" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#38bdf8" />
+                                <stop offset="50%" stop-color="#818cf8" />
+                                <stop offset="100%" stop-color="#c084fc" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
 
-                <!-- Columna Izquierda: Tacómetro y Botones -->
-                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center;">
-                    <div class="provider-info" style="width: 100%; justify-content: center; margin-bottom: 10px;">
-                        <div class="provider-item">IP: <span id="user-ip">Buscando...</span></div>
-                        <div class="provider-item">ISP: <span id="user-isp">Buscando...</span></div>
+                        <!-- Fondo del Arco -->
+                        <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#272a33" stroke-width="12"
+                            stroke-linecap="round" />
+
+                        <!-- Arco de Progreso. max length ~251.3 -->
+                        <path id="speed-arc" class="speed-progress" d="M 20 110 A 80 80 0 0 1 180 110" fill="none"
+                            stroke="url(#gradSpeed)" stroke-width="12" stroke-linecap="round" stroke-dasharray="251.3"
+                            stroke-dashoffset="251.3" filter="url(#glow)" />
+
+                        <!-- Aguja (Aseguramos que el pivote sea el centro del arco: 100, 110) -->
+                        <g id="needle" class="needle" transform="translate(100, 110) rotate(-90)">
+                            <polygon points="-3,0 3,0 0,-65" fill="#fff" filter="url(#glow)" />
+                            <circle cx="0" cy="0" r="5" fill="#fff" />
+                            <circle cx="0" cy="0" r="2" fill="#0f1115" />
+                        </g>
+
+                        <!-- Textos de Escala -->
+                        <text x="20" y="125" fill="#64748b" font-size="7" font-weight="600"
+                            text-anchor="middle">0</text>
+                        <text x="40" y="55" fill="#64748b" font-size="7" font-weight="600"
+                            text-anchor="middle">10</text>
+                        <text x="100" y="22" fill="#64748b" font-size="7" font-weight="600"
+                            text-anchor="middle">100</text>
+                        <text x="160" y="55" fill="#64748b" font-size="7" font-weight="600"
+                            text-anchor="middle">500</text>
+                        <text x="180" y="125" fill="#64748b" font-size="7" font-weight="600"
+                            text-anchor="middle">1G+</text>
+                    </svg>
+
+                    <div class="speed-center-text">
+                        <div class="speed-value" id="speed-readout">0.0</div>
+                        <div class="speed-unit">Mbps</div>
+                        <div class="indicator-pill" id="phase-indicator">EN ESPERA</div>
                     </div>
+                </div>
 
-                    <div class="tachometer-wrapper">
-                        <svg viewBox="0 0 200 130" class="speed-svg" id="tach-svg">
-                            <defs>
-                                <linearGradient id="gradientSpeed" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#38bdf8" />
-                                    <stop offset="50%" stop-color="#818cf8" />
-                                    <stop offset="100%" stop-color="#c084fc" />
-                                </linearGradient>
-                                <filter id="glow">
-                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                                    <feMerge>
-                                        <feMergeNode in="coloredBlur" />
-                                        <feMergeNode in="SourceGraphic" />
-                                    </feMerge>
-                                </filter>
-                            </defs>
+                <div class="primary-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Ping</div>
+                        <div class="stat-val" id="val-ping">--</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Jitter</div>
+                        <div class="stat-val" id="val-jitter">--</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Descarga</div>
+                        <div class="stat-val" style="color: #38bdf8;" id="val-down">--</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Subida</div>
+                        <div class="stat-val" style="color: #c084fc;" id="val-up">--</div>
+                    </div>
+                </div>
 
-                            <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#1f2937" stroke-width="14"
-                                stroke-linecap="round" />
-                            <path id="speed-arc" class="speed-progress" d="M 20 110 A 80 80 0 0 1 180 110" fill="none"
-                                stroke="url(#gradientSpeed)" stroke-width="14" stroke-linecap="round"
-                                stroke-dasharray="251.3" stroke-dashoffset="251.3" filter="url(#glow)" />
-                            <g id="needle" class="needle" transform="translate(100, 110) rotate(-90)">
-                                <polygon points="-4,0 4,0 0,-70" fill="#fff" filter="url(#glow)" />
-                                <circle cx="0" cy="0" r="6" fill="#fff" />
-                                <circle cx="0" cy="0" r="3" fill="#070b14" />
-                            </g>
-                            <text x="20" y="125" fill="#6b7280" font-size="7" font-weight="bold"
-                                text-anchor="middle">0</text>
-                            <text x="40" y="55" fill="#6b7280" font-size="7" font-weight="bold"
-                                text-anchor="middle">10</text>
-                            <text x="100" y="20" fill="#6b7280" font-size="7" font-weight="bold"
-                                text-anchor="middle">100</text>
-                            <text x="160" y="55" fill="#6b7280" font-size="7" font-weight="bold"
-                                text-anchor="middle">500</text>
-                            <text x="180" y="125" fill="#6b7280" font-size="7" font-weight="bold"
-                                text-anchor="middle">1G+</text>
+                <button class="main-btn" id="btn-start" onclick="toggleTestState()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Iniciar Análisis
+                </button>
+            </div>
+
+            <!-- COLUMNA DERECHA: Análisis Inteligente -->
+            <div class="panel">
+                <div class="copilot-card">
+                    <div class="copilot-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a2 2 0 0 1 2 2c0 1.1-.9 2-2 2s-2-.9-2-2 1.1-2 2-2z" />
+                            <path
+                                d="M19 14.5v-2c0-3-2.1-5.5-5-6.2v-.8c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5v.8C8.1 7 6 9.5 6 12.5v2L4 17h16l-2-2.5z" />
+                            <path d="M10 18h4v1.5c0 1.1-.9 2-2 2s-2-.9-2-2V18z" />
                         </svg>
-
-                        <div class="speed-text-center">
-                            <div class="speed-value" id="speed-readout">0.0</div>
-                            <div class="speed-unit">Mbps</div>
-                            <div class="test-type-indicator" id="test-type-ind">Esperando</div>
-                        </div>
+                        Copiloto IA
                     </div>
-
-                    <div class="advanced-stats">
-                        <div class="adv-stat">
-                            <div class="adv-stat-label">Latencia (Ping)</div>
-                            <div class="adv-stat-val" id="final-ping">-- ms</div>
-                        </div>
-                        <div class="adv-stat">
-                            <div class="adv-stat-label">Jitter</div>
-                            <div class="adv-stat-val" id="final-jitter">-- ms</div>
-                        </div>
-                    </div>
-
-                    <div class="app-status" id="app-status">Listo para iniciar</div>
-
-                    <div class="controls">
-                        <button class="btn" id="start-btn" onclick="runSingleTest()">▶ Iniciar Prueba</button>
-                        <button class="btn btn-dl" id="dl-btn" onclick="downloadLogs()" style="display:none;">↓
-                            Descargar Log CSV</button>
+                    <div class="copilot-text" id="ai-text">
+                        Bienvenido. Haz clic en "Iniciar Análisis" para medir el rendimiento de tu conexión actual.
+                        Evaluaré tu red y te daré recomendaciones.
                     </div>
                 </div>
 
-                <!-- Columna Derecha: Proceso y Stats -->
-                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column;">
-                    <h3 style="margin:0 0 15px 0; font-size: 1.1rem; color: #fff;">Comparativa de Servidores</h3>
-                    <div class="ping-stats" id="ping-container">
-                        <!-- Generado por JS -->
-                    </div>
-
-                    <h3 style="margin:20px 0 10px 0; font-size: 1.1rem; color: #fff;">Terminal de Proceso</h3>
-                    <div class="process-log" id="process-log">
-                        <div class="log-line"><span class="log-time">[${new Date().toLocaleTimeString()}]</span> Sistema
-                            Inicializado. Clic en Iniciar Prueba.</div>
+                <div style="margin-top: 20px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 0.9rem; color: #fff;">Optimización de Plataformas</h3>
+                    <div class="apps-list" id="apps-container">
+                        <!-- Apps inject here -->
                     </div>
                 </div>
 
+                <div style="margin-top: 25px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 0.9rem; color: #fff;">Monitor Híbrido (Pings)</h3>
+                    <div class="hybrid-pings" id="hybrid-container">
+                        <div class="hybrid-item">Speedtest.net <span class="val" id="hy-speedtest">-- ms</span></div>
+                        <div class="hybrid-item">nPerf <span class="val" id="hy-nperf">-- ms</span></div>
+                        <div class="hybrid-item">Cantv (Local) <span class="val" id="hy-cantv">-- ms</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL INFERIOR: Tabla de Logs -->
+            <div class="panel" style="grid-column: 1 / -1;">
+                <div class="action-row" style="margin-top:0; margin-bottom: 15px;">
+                    <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Registro Histórico de Pruebas</h3>
+                    <div>
+                        <button class="btn" onclick="clearLogs()" style="margin-right: 10px;">Limpiar</button>
+                        <button class="btn" style="background: var(--good); border-color: transparent; color: #fff;"
+                            onclick="exportCSV()">Exportar CSV</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="log-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Modo</th>
+                                <th>Ping</th>
+                                <th>Jitter</th>
+                                <th>Descarga</th>
+                                <th>Subida</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Scripts insert rows -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Configuración de Servidores para Ping
+        /* CONTEXTO Y ALMACENAMIENTO */
+        let currentTestAbort = null;
+        let isTesting = false;
+        let loopTimeout = null;
+        let applicationLogs = JSON.parse(localStorage.getItem('nautiluzLogs_v3')) || [];
+
+        const ARC_MAX = 251.3;
         const TARGETS = [
-            { id: 'speedtest', name: 'Speedtest.net', url: 'https://www.speedtest.net/favicon.ico' },
-            { id: 'nperf', name: 'nPerf', url: 'https://www.nperf.com/favicon.ico' },
-            { id: 'cantv', name: 'Cantv (Local)', url: 'https://velocidadaba.cantv.net/favicon.ico' }
+            { id: 'speedtest', url: 'https://www.speedtest.net/favicon.ico' },
+            { id: 'nperf', url: 'https://www.nperf.com/favicon.ico' },
+            { id: 'cantv', url: 'https://velocidadaba.cantv.net/favicon.ico' }
         ];
 
-        let testResults = {}; // Almacena el log de la prueba actual o última terminada
-        const ARC_MAX = 251.3;
+        const PLATFORMS = [
+            { id: 'netflix', name: 'Netflix 4K HDR', reqDl: 25, reqPing: 100 },
+            { id: 'youtube', name: 'YouTube HD', reqDl: 5, reqPing: 1000 },
+            { id: 'gaming', name: 'Gaming Competitivo', reqDl: 15, reqPing: 60 },
+            { id: 'zoom', name: 'Zoom / Videollamadas', reqDl: 3, reqPing: 150 },
+            { id: 'spotify', name: 'Spotify / Audio', reqDl: 1, reqPing: 2000 }
+        ];
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderPingCards();
-            fetchIPInfo();
+            fetchIP();
+            renderApps(0, 0);
+            updateTable();
         });
 
-        function addLogLine(msg, isError = false) {
-            const term = document.getElementById('process-log');
-            const time = new Date().toLocaleTimeString();
-            const color = isError ? '#ef4444' : '#a3be8c';
-            term.innerHTML += `<div class="log-line" style="color:${color}"><span class="log-time">[${time}]</span> ${msg}</div>`;
-            term.scrollTop = term.scrollHeight; // Auto-scroll
-        }
-
-        async function fetchIPInfo() {
+        /* OBTENCIÓN DE DATOS DEL PROVEEDOR */
+        async function fetchIP() {
             try {
-                addLogLine("Obteniendo datos de IP pública y Proveedor...");
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
                 document.getElementById('user-ip').innerText = data.ip;
                 document.getElementById('user-isp').innerText = data.org;
-                testResults.ip = data.ip;
-                testResults.isp = data.org;
-                testResults.location = `${data.city}, ${data.country_name}`;
-                addLogLine(`IP detectada: ${data.ip} (${data.org})`);
-            } catch (e) {
-                document.getElementById('user-ip').innerText = "Desconocida";
-                document.getElementById('user-isp').innerText = "Desconocido";
-                addLogLine("No se pudo obtener la IP y el proveedor (posible bloqueo de adblocker).", true);
-            }
+            } catch (e) { /* silent fail on adblocker */ }
         }
 
-        function renderPingCards() {
-            const container = document.getElementById('ping-container');
-            container.innerHTML = '';
-            TARGETS.forEach(t => {
-                container.innerHTML += `
-                    <div class="ping-card">
-                        <div class="ping-card-info">
-                            <h4>${t.name}</h4>
-                            <p>Latencia HTTP a Servidor</p>
-                        </div>
-                        <div class="ping-value pending" id="ping-${t.id}">-- ms</div>
-                    </div>
-                `;
-            });
-        }
-
+        /* SISTEMA VISUAL: TACHOMETER */
         function speedToPercentage(mbps) {
             if (mbps <= 0) return 0;
             if (mbps >= 1000) return 1;
@@ -609,268 +667,306 @@
             return 0.75 + ((mbps - 500) / 500) * 0.25;
         }
 
-        function setTachometer(mbps, type = "download") {
-            document.getElementById('speed-readout').innerText = mbps > 0 ? mbps.toFixed(1) : '0.0';
+        function updateGauge(mbps, type = 'download') {
+            const displayVal = mbps > 0 ? mbps.toFixed(1) : '0.0';
+            document.getElementById('speed-readout').innerText = displayVal;
+
             const pctg = speedToPercentage(mbps);
+            // Correct vector angle: -90 (left) to +90 (right). Center is 0.
             const angle = -90 + (pctg * 180);
+
+            // CSS transform applies over the center defined via transform-origin
             document.getElementById('needle').style.transform = `translate(100px, 110px) rotate(${angle}deg)`;
+
             const offset = ARC_MAX - (pctg * ARC_MAX);
+            document.getElementById('speed-arc').style.strokeDashoffset = offset;
 
-            const arc = document.getElementById('speed-arc');
-            arc.style.strokeDashoffset = offset;
-
-            // Cambiar gradiente según subida o bajada
-            const defs = document.querySelector('#tach-svg defs');
-            const ind = document.getElementById('test-type-ind');
+            const grad = document.getElementById('gradSpeed');
+            const phase = document.getElementById('phase-indicator');
             if (type === 'download') {
-                defs.innerHTML = `<linearGradient id="gradientSpeed" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#818cf8" /><stop offset="100%" stop-color="#c084fc" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-                ind.innerText = "DESCARGA";
-                ind.className = "test-type-indicator download";
+                grad.innerHTML = `<stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#818cf8" /><stop offset="100%" stop-color="#c084fc" />`;
+                phase.innerText = "DESCARGA";
+                phase.style.color = "#38bdf8";
+                phase.style.background = "rgba(56, 189, 248, 0.1)";
             } else if (type === 'upload') {
-                defs.innerHTML = `<linearGradient id="gradientSpeed" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a78bfa" /><stop offset="50%" stop-color="#d946ef" /><stop offset="100%" stop-color="#f43f5e" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-                ind.innerText = "SUBIDA";
-                ind.className = "test-type-indicator upload";
-            } else {
-                ind.innerText = "";
+                grad.innerHTML = `<stop offset="0%" stop-color="#a78bfa" /><stop offset="50%" stop-color="#d946ef" /><stop offset="100%" stop-color="#f43f5e" />`;
+                phase.innerText = "SUBIDA";
+                phase.style.color = "#d946ef";
+                phase.style.background = "rgba(217, 70, 239, 0.1)";
             }
         }
 
-        async function pingDomain(url, retries = 3) {
-            let latencies = [];
-            for (let i = 0; i < retries; i++) {
-                const p = await new Promise((resolve) => {
-                    const start = performance.now();
-                    const img = new Image();
-                    img.onload = () => resolve(performance.now() - start);
-                    img.onerror = () => {
-                        const dur = performance.now() - start;
-                        resolve(dur > 3000 ? -1 : dur);
-                    };
-                    img.src = `${url}?cb=${Date.now()}_${Math.random()}`;
-                    setTimeout(() => resolve(-1), 4000);
-                });
-                if (p > 0) latencies.push(p);
-                await new Promise(r => setTimeout(r, 200)); // pequeña pausa
+        /* COPILOTO IA & PLATAFORMAS */
+        function updateAI(state, ping = 0, dl = 0) {
+            const textEl = document.getElementById('ai-text');
+            if (state === 'pinging') {
+                textEl.innerText = "Verificando enrutamiento y latencias con los servidores perimetrales...";
+            } else if (state === 'downloading') {
+                textEl.innerText = "Estresando la conexión de descarga. Evaluando ancho de banda entrante...";
+            } else if (state === 'uploading') {
+                textEl.innerText = "Transfiriendo paquetes de subida. Comprobando canal de retorno...";
+            } else if (state === 'done') {
+                if (dl > 100 && ping < 50) {
+                    textEl.innerText = "¡Conexión de Alto Rendimiento! 🚀\nTienes velocidad abundante para hogares inteligentes, múltiples streams simultáneos en 4K y gaming competitivo de primer nivel sin lag.";
+                } else if (dl >= 25 && ping < 100) {
+                    textEl.innerText = "Conexión Óptima. ✔️\nIdeal para consumir contenido en 4K y teletrabajo fluido. Algunos juegos muy exigentes podrían notar ligera latencia, pero en general es muy estable.";
+                } else if (dl >= 5) {
+                    textEl.innerText = "Conexión Básica. ⚠️\nSuficiente para navegación estándar, clases virtuales y YouTube en HD. Las descargas grandes tomarán tiempo y podrías tener buffering si hay muchos dispositivos conectados.";
+                } else {
+                    textEl.innerText = "Conexión Deficiente. ❌\nTu internet es inestable o muy lento. Recomendado apagar videos HD, limitar descargas y contactar a tu proveedor si este no es el plan contratado.";
+                }
+            } else if (state === 'error') {
+                textEl.innerText = "Se interrumpió la prueba o no hay conexión de red disponible.";
             }
-            return latencies;
         }
 
-        // Calcula Jitter a partir de un arreglo de latencias (variación del retardo)
-        function calculateJitter(latencies) {
-            if (latencies.length < 2) return 0;
-            let sumDiffs = 0;
-            for (let i = 1; i < latencies.length; i++) {
-                sumDiffs += Math.abs(latencies[i] - latencies[i - 1]);
-            }
-            return sumDiffs / (latencies.length - 1);
+        function renderApps(dlMbps, pingMs) {
+            const container = document.getElementById('apps-container');
+            container.innerHTML = '';
+
+            PLATFORMS.forEach(app => {
+                let status = 'red'; // poor
+                if (dlMbps === 0 && pingMs === 0) status = 'yellow'; // pending
+                else if (dlMbps >= app.reqDl && pingMs <= app.reqPing) status = 'green';
+                else if (dlMbps >= (app.reqDl / 2) && pingMs <= (app.reqPing * 1.5)) status = 'yellow';
+
+                container.innerHTML += `
+                <div class="app-item">
+                    <div class="app-item-left">
+                        <div class="status-dot ${status}"></div>
+                        ${app.name}
+                    </div>
+                </div>
+            `;
+            });
         }
 
-        async function measureBandwidth(type = "download", durationSeconds) {
-            const url = type === "download"
-                // Usamos fetch de cloudflare (100MB chunk ficticio que cortamos a los X segundos)
-                ? `https://speed.cloudflare.com/__down?bytes=${100000000}`
-                // Upload endpoint (envia basura generada)
-                : 'https://speed.cloudflare.com/__up';
+        /* MOTORES DE MEDICIÓN */
+        async function pingTarget(url) {
+            return new Promise((resolve) => {
+                const start = performance.now();
+                const img = new Image();
+                img.onload = () => resolve(performance.now() - start);
+                img.onerror = () => {
+                    const dur = performance.now() - start;
+                    resolve(dur < 3000 ? dur : -1);
+                };
+                img.src = `${url}?cb=${Date.now()}_${Math.random()}`;
+                setTimeout(() => resolve(-1), 3500);
+            });
+        }
+
+        async function measureThroughput(type = 'download') {
+            const url = type === 'download'
+                ? `https://speed.cloudflare.com/__down?bytes=50000000` // 50MB
+                : `https://speed.cloudflare.com/__up`;
 
             const start = performance.now();
-            let totalBytes = 0;
-            const controller = new AbortController();
-
-            // Timeout enforced para la duración que seleccionó el usuario
-            const timeoutId = setTimeout(() => controller.abort(), durationSeconds * 1000);
+            let totalBits = 0;
+            currentTestAbort = new AbortController();
 
             try {
-                if (type === "download") {
-                    const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
-                    if (!res.ok) throw new Error("CORS Fail");
+                if (type === 'download') {
+                    const res = await fetch(url, { signal: currentTestAbort.signal, cache: 'no-store' });
                     const reader = res.body.getReader();
-
                     while (true) {
                         const { done, value } = await reader.read();
                         if (done) break;
-                        totalBytes += value.length;
-                        const currSec = (performance.now() - start) / 1000;
-                        if (currSec > 0.1) {
-                            const mbps = (totalBytes * 8) / 1000000 / currSec;
-                            setTachometer(mbps, type);
-                        }
+                        totalBits += (value.length * 8);
+                        const currSecs = (performance.now() - start) / 1000;
+                        if (currSecs > 0.1) updateGauge(totalBits / 1000000 / currSecs, type);
                     }
                 } else {
-                    // Simular Upload iterativo mediante POST de pedazos de 1MB hasta que el timeout corte
-                    const chunk = new Uint8Array(1000000); // 1 MB
-                    while (performance.now() - start < (durationSeconds * 1000)) {
-                        const upStart = performance.now();
-                        await fetch(url, {
-                            method: 'POST',
-                            body: chunk,
-                            signal: controller.signal
-                        }).catch(e => { if (e.name !== 'AbortError') throw e; });
-                        totalBytes += chunk.length;
-
-                        const currSec = (performance.now() - start) / 1000;
-                        if (currSec > 0.1) {
-                            const mbps = (totalBytes * 8) / 1000000 / currSec;
-                            setTachometer(mbps, type);
-                        }
+                    // Upload estresante de chunks de 1MB por 5 segundos exactos
+                    const payload = new Uint8Array(1000000);
+                    while (performance.now() - start < 5000) {
+                        await fetch(url, { method: 'POST', body: payload, signal: currentTestAbort.signal }).catch(e => { });
+                        totalBits += (payload.length * 8);
+                        const currSecs = (performance.now() - start) / 1000;
+                        if (currSecs > 0.1) updateGauge(totalBits / 1000000 / currSecs, type);
                     }
                 }
+            } catch (e) { /* aborting handled */ }
+
+            const totalSecs = (performance.now() - start) / 1000;
+            return totalBits / 1000000 / totalSecs;
+        }
+
+        /* ORQUESTADOR PRINCIPAL */
+        async function executeTestSequence() {
+            if (isTesting) return;
+            isTesting = true;
+
+            const btn = document.getElementById('btn-start');
+            btn.innerHTML = `⏸ Detener Análisis`;
+            btn.classList.add('stop');
+
+            // Reset UI
+            document.getElementById('val-ping').innerText = "--";
+            document.getElementById('val-jitter').innerText = "--";
+            document.getElementById('val-down').innerText = "--";
+            document.getElementById('val-up').innerText = "--";
+            updateGauge(0, 'download');
+            TARGETS.forEach(t => document.getElementById(`hy-${t.id}`).innerText = "Midiendo...");
+
+            try {
+                updateAI('pinging');
+                let latencies = [];
+
+                // Pings Simultáneos para agilizar y sacar promedio real
+                await Promise.all(TARGETS.map(async t => {
+                    let sum = 0, hits = 0;
+                    for (let i = 0; i < 3; i++) {
+                        if (!isTesting) break;
+                        const ms = await pingTarget(t.url);
+                        if (ms > 0) { sum += ms; hits++; latencies.push(ms); }
+                        await new Promise(r => setTimeout(r, 50));
+                    }
+                    const avg = hits > 0 ? sum / hits : -1;
+                    document.getElementById(`hy-${t.id}`).innerText = avg > 0 ? `${Math.round(avg)} ms` : 'Fallo';
+                }));
+
+                if (!isTesting) throw new Error("Aborterd");
+
+                // Calculos Ping/Jitter
+                let finalPing = 0; let finalJitter = 0;
+                if (latencies.length > 0) {
+                    finalPing = latencies.reduce((a, b) => a + b, 0) / latencies.length;
+                    let sumDiffs = 0;
+                    for (let i = 1; i < latencies.length; i++) sumDiffs += Math.abs(latencies[i] - latencies[i - 1]);
+                    finalJitter = latencies.length > 1 ? sumDiffs / (latencies.length - 1) : 0;
+                }
+
+                document.getElementById('val-ping').innerText = Math.round(finalPing);
+                document.getElementById('val-jitter').innerText = finalJitter.toFixed(1);
+
+                // Descarga
+                updateAI('downloading');
+                const down = await measureThroughput('download');
+                if (!isTesting) throw new Error("Aborterd");
+                document.getElementById('val-down').innerText = down.toFixed(1);
+
+                // Subida
+                updateAI('uploading');
+                const up = await measureThroughput('upload');
+                if (!isTesting) throw new Error("Aborterd");
+                document.getElementById('val-up').innerText = up.toFixed(1);
+
+                // Finalizado
+                document.getElementById('phase-indicator').innerText = "COMPLETADO";
+                document.getElementById('phase-indicator').style.color = "var(--text-main)";
+                updateGauge(0);
+                updateAI('done', finalPing, down);
+                renderApps(down, finalPing);
+
+                // Guardar Log
+                saveLog({
+                    ping: Math.round(finalPing),
+                    jitter: finalJitter.toFixed(1),
+                    down: down.toFixed(2),
+                    up: up.toFixed(2)
+                });
+
+                handleNextLoop();
 
             } catch (e) {
-                if (e.name !== 'AbortError') {
-                    addLogLine(`Mecanismo principal falló por bloqueo web (CORS): ${type}. ${e.message}`, true);
-                    return parseFloat(navigator.connection?.downlink || 0); // fallback
-                }
-            } finally {
-                clearTimeout(timeoutId);
+                updateAI('error');
+                resetButton();
             }
-
-            const trueDuration = (performance.now() - start) / 1000;
-            return (totalBytes * 8) / 1000000 / trueDuration;
         }
 
-        async function runSingleTest() {
-            if (document.getElementById('start-btn').disabled) return;
-
-            const btn = document.getElementById('start-btn');
-            btn.disabled = true;
-            btn.innerText = "Evaluando...";
-            document.getElementById('dl-btn').style.display = 'none';
-            document.getElementById('app-status').innerText = "Iniciando secuencia corporativa...";
-            document.getElementById('final-ping').innerText = "-- ms";
-            document.getElementById('final-jitter').innerText = "-- ms";
-            setTachometer(0, 'download');
-
-            testResults = { // Reset Log Data
-                date: new Date().toLocaleString(),
-                ip: document.getElementById('user-ip').innerText,
-                isp: document.getElementById('user-isp').innerText,
-                serverComparative: {}
-            };
-
-            updateTrafficLight('yellow');
-            const dur = parseInt(document.getElementById('test-duration').value);
-
-            // 1. PINGS Y JITTER COMPARATIVO
-            addLogLine("--------------------------");
-            addLogLine("Fase 1: Pings y Estabilidad de Enrutamiento...");
-            let allLatencies = [];
-            let r_pings = {};
-
-            for (let t of TARGETS) {
-                document.getElementById(`ping-${t.id}`).innerText = "Midieno...";
-                const lats = await pingDomain(t.url, 4);
-
-                if (lats.length > 0) {
-                    const avg = lats.reduce((a, b) => a + b, 0) / lats.length;
-                    const el = document.getElementById(`ping-${t.id}`);
-                    el.innerText = Math.round(avg) + ' ms';
-                    el.className = 'ping-value ' + (avg < 150 ? 'good' : 'warn');
-                    addLogLine(`Servidor [${t.name}]: Media ${Math.round(avg)}ms (Paquetes: ${lats.length}/4)`);
-
-                    allLatencies.push(...lats);
-                    r_pings[t.name] = Math.round(avg);
-                } else {
-                    document.getElementById(`ping-${t.id}`).innerText = "Falló";
-                    document.getElementById(`ping-${t.id}`).className = 'ping-value bad';
-                    addLogLine(`Servidor [${t.name}]: No alcanzable o bloqueado`, true);
-                    r_pings[t.name] = -1;
-                }
-            }
-
-            testResults.serverComparative = r_pings;
-
-            // Calcular Ping General y Jitter General
-            if (allLatencies.length > 0) {
-                const finalPing = allLatencies.reduce((a, b) => a + b, 0) / allLatencies.length;
-                const finalJitter = calculateJitter(allLatencies);
-
-                document.getElementById('final-ping').innerText = Math.round(finalPing) + ' ms';
-                document.getElementById('final-jitter').innerText = finalJitter.toFixed(1) + ' ms';
-
-                testResults.ping = Math.round(finalPing);
-                testResults.jitter = finalJitter.toFixed(1);
-                addLogLine(`=> Resumen: Latencia Media ${Math.round(finalPing)}ms | Jitter ${finalJitter.toFixed(1)}ms`);
+        function toggleTestState() {
+            if (isTesting) {
+                // STOP
+                isTesting = false;
+                if (currentTestAbort) currentTestAbort.abort();
+                if (loopTimeout) clearTimeout(loopTimeout);
+                resetButton();
+                updateGauge(0);
+                document.getElementById('phase-indicator').innerText = "CANCELADO";
             } else {
-                addLogLine("=> Error fatal: Sin conexión a servidores de prueba.", true);
-                updateTrafficLight('red');
-                btn.disabled = false;
-                btn.innerText = "Reintentar";
-                return;
+                // START
+                executeTestSequence();
             }
-
-            // 2. DESCARGA
-            addLogLine(`Fase 2: Probando ancho de banda de DESCARGA por ${dur} segs...`);
-            document.getElementById('app-status').innerText = "Midiendo Descarga (Download)...";
-            const downMbps = await measureBandwidth("download", dur);
-            testResults.download = downMbps.toFixed(2);
-            setTachometer(downMbps, 'download');
-            addLogLine(`=> Descarga finalizada: ${testResults.download} Mbps`);
-
-            await new Promise(r => setTimeout(r, 1500)); // pausa dramatica
-            setTachometer(0, 'upload');
-
-            // 3. SUBIDA
-            addLogLine(`Fase 3: Probando ancho de banda de SUBIDA (Upload) por ${dur / 2} segs...`);
-            document.getElementById('app-status').innerText = "Midiendo Subida (Upload)...";
-            // Para la subida damos la mitad del tiempo porque suele saturar rapido los routers
-            const upMbps = await measureBandwidth("upload", dur / 2);
-            testResults.upload = upMbps.toFixed(2);
-            setTachometer(upMbps, 'upload');
-            addLogLine(`=> Subida finalizada: ${testResults.upload} Mbps`);
-
-            // 4. FINALIZAR
-            addLogLine("✅ Secuencia completada. Informe generado listo para descarga.");
-            document.getElementById('app-status').innerText = "Test Completado.";
-            updateTrafficLight('green');
-
-            btn.disabled = false;
-            btn.innerText = "▶ Nuevo Test";
-            document.getElementById('dl-btn').style.display = 'block'; // Mostrar boton para descargar
-
-            // Regresar tacómetro visual
-            setTimeout(() => {
-                const finalAvg = (downMbps + upMbps) / 2;
-                setTachometer(finalAvg, ''); // Solo para mostrar visual el promedio
-                document.getElementById('test-type-ind').innerText = "PROMEDIO";
-                document.getElementById('speed-readout').innerText = `D:${testResults.download} | U:${testResults.upload}`;
-                document.getElementById('speed-readout').style.fontSize = '1.8rem';
-            }, 2500);
         }
 
-        function updateTrafficLight(color) {
-            document.querySelectorAll('.light').forEach(el => el.classList.remove('active'));
-            if (color) document.getElementById(`light-${color}`).classList.add('active');
+        function handleNextLoop() {
+            resetButton();
+            const mode = document.getElementById('test-mode').value;
+            if (mode !== 'manual') {
+                const secs = parseInt(mode);
+                document.getElementById('phase-indicator').innerText = `PRÓXIMO EN ${secs}S`;
+                loopTimeout = setTimeout(() => {
+                    if (!isTesting) executeTestSequence();
+                }, secs * 1000);
+
+                // Change button visual to indicate running loop
+                const btn = document.getElementById('btn-start');
+                btn.innerHTML = `⏸ Detener Bucle`;
+                btn.classList.add('stop');
+                isTesting = true; // prevent manual start while waiting
+            }
         }
 
-        // Generar y Descargar un LOG en texto/csv
-        function downloadLogs() {
-            if (!testResults.download) return; // No hay test completado
+        function resetButton() {
+            isTesting = false;
+            const btn = document.getElementById('btn-start');
+            btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Iniciar Análisis`;
+            btn.classList.remove('stop');
+        }
 
-            // Construir contenido para el archivo
-            let content = `--- REPORTE DE VELOCIDAD DE INTERNET ---\n`;
-            content += `Fecha de la Prueba: ${testResults.date}\n`;
-            content += `Direccion IP: ${testResults.ip}\n`;
-            content += `Proveedor (ISP): ${testResults.isp}\n`;
-            content += `----------------------------------------\n`;
-            content += `--> VELOCIDAD DESCARGA: ${testResults.download} Mbps\n`;
-            content += `--> VELOCIDAD SUBIDA:   ${testResults.upload} Mbps\n`;
-            content += `--> LATENCIA MEDIA:     ${testResults.ping} ms\n`;
-            content += `--> JITTER (Fluctuacion):${testResults.jitter} ms\n`;
-            content += `----------------------------------------\n`;
-            content += `DETALLE DE ENRUTAMIENTO (Pings Simulados)\n`;
-            for (const [server, ms] of Object.entries(testResults.serverComparative)) {
-                content += `- ${server}: ${ms > 0 ? ms + ' ms' : 'Fallo'}\n`;
+        /* CONTROL DE LOGS */
+        function saveLog(data) {
+            const modeTxt = document.getElementById('test-mode').options[document.getElementById('test-mode').selectedIndex].text;
+            applicationLogs.unshift({
+                date: new Date().toLocaleString(),
+                mode: modeTxt.split('(')[0].trim(),
+                ping: data.ping,
+                jitter: data.jitter,
+                down: data.down,
+                up: data.up
+            });
+            if (applicationLogs.length > 100) applicationLogs.pop();
+            localStorage.setItem('nautiluzLogs_v3', JSON.stringify(applicationLogs));
+            updateTable();
+        }
+
+        function updateTable() {
+            const tbody = document.querySelector('#log-table tbody');
+            tbody.innerHTML = '';
+            applicationLogs.forEach(l => {
+                tbody.innerHTML += `
+                <tr>
+                    <td style="color: var(--text-muted); font-family: 'Inter'; font-size: 0.8rem;">${l.date}</td>
+                    <td style="font-family: 'Inter';">${l.mode}</td>
+                    <td>${l.ping} ms</td>
+                    <td>${l.jitter} ms</td>
+                    <td style="color: #38bdf8;">${l.down}</td>
+                    <td style="color: #c084fc;">${l.up}</td>
+                </tr>
+            `;
+            });
+        }
+
+        function clearLogs() {
+            if (confirm("¿Seguro que deseas limpiar el historial de pruebas?")) {
+                applicationLogs = [];
+                localStorage.removeItem('nautiluzLogs_v3');
+                updateTable();
             }
-            content += `\nGenerado por VelocityMonitor (Local Tool).`;
+        }
 
-            // Crear el archivo Blob y forzar descarga
-            const blob = new window.Blob([content], { type: 'text/plain;charset=utf-8' });
+        function exportCSV() {
+            if (applicationLogs.length === 0) return alert("No hay datos para exportar.");
+            let csv = "Fecha,Modo,Ping(ms),Jitter(ms),Descarga(Mbps),Subida(Mbps)\n";
+            applicationLogs.forEach(l => {
+                csv += `"${l.date}","${l.mode}",${l.ping},${l.jitter},${l.down},${l.up}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
             const a = document.createElement('a');
-            a.href = window.URL.createObjectURL(blob);
-            a.download = `Test_Velocidad_${testResults.isp.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().getTime()}.txt`;
-            document.body.appendChild(a);
+            a.href = URL.createObjectURL(blob);
+            a.download = `Speedtest_Nautiluz_Export_${new Date().getTime()}.csv`;
             a.click();
-            document.body.removeChild(a);
         }
 
     </script>
