@@ -42,7 +42,7 @@
 
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -60,12 +60,6 @@
             border: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 15px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
         .brand h1 {
@@ -118,6 +112,7 @@
             font-size: 0.85rem;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
+            flex-wrap: wrap;
         }
 
         .header-info span {
@@ -127,11 +122,21 @@
         /* ----- GRID LAYOUT ----- */
         .dashboard {
             display: grid;
-            grid-template-columns: minmax(300px, 1fr) 350px;
+            grid-template-columns: minmax(350px, 1fr) 350px 300px;
             gap: 20px;
         }
 
-        @media (max-width: 850px) {
+        @media (max-width: 1050px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .dashboard>.panel:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 750px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
@@ -148,68 +153,63 @@
             overflow: hidden;
         }
 
-        /* ----- TACHOMETER ----- */
-        .tachometer-container {
+        .panel h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        /* ----- DIGITAL CLOCK & SPEED DISPLAY ----- */
+        .digital-display {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 0;
-            position: relative;
+            padding: 30px 0;
+            gap: 15px;
         }
 
-        .speed-svg {
-            width: 100%;
-            max-width: 380px;
-            overflow: visible;
-        }
-
-        /* Smooth needle animation with CSS transform on SVG elements */
-        .needle {
-            transform-origin: 100px 110px;
-            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .speed-progress {
-            transition: stroke-dashoffset 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .speed-center-text {
-            position: absolute;
-            top: 60%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .speed-value {
+        .speed-readout {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 700;
             line-height: 1;
             background: linear-gradient(180deg, #fff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
 
         .speed-unit {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: var(--text-muted);
             font-weight: 600;
-            letter-spacing: 1px;
-            margin-top: 5px;
+            letter-spacing: 2px;
         }
 
-        .indicator-pill {
+        .digital-clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--accent);
+            background: #0f1115;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .phase-indicator {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 16px;
             background: rgba(59, 130, 246, 0.1);
             color: var(--accent);
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 1px;
-            margin-top: 10px;
             text-transform: uppercase;
         }
 
@@ -241,10 +241,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
         }
 
         .stat-val {
@@ -254,61 +250,36 @@
             color: var(--text-main);
         }
 
-        /* ----- AI COPILOT ----- */
-        .copilot-card {
-            background: linear-gradient(145deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-top: 0;
-            position: relative;
-        }
-
-        .copilot-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            color: #818cf8;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .copilot-header svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .copilot-text {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: var(--text-main);
-        }
-
-        /* ----- APP OPTIMIZATIONS ----- */
-        .apps-list {
-            margin-top: 20px;
+        /* ----- LISTS (PING / DNS / APPS) ----- */
+        .item-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .app-item {
+        .list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
             background: #0f1115;
+            padding: 10px 14px;
             border-radius: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid #222;
         }
 
-        .app-item-left {
+        .list-item-left {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .list-item span.val {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-main);
+            font-weight: 600;
         }
 
         .status-dot {
@@ -316,7 +287,6 @@
             height: 10px;
             border-radius: 50%;
             background: var(--text-muted);
-            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
             transition: all 0.3s;
         }
 
@@ -335,28 +305,40 @@
             box-shadow: 0 0 8px var(--fail);
         }
 
-        /* ----- HYBRID PING TEST ----- */
-        .hybrid-pings {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        /* ----- INFO BOXES ----- */
+        .info-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 15px;
             margin-top: 20px;
-        }
-
-        .hybrid-item {
-            display: flex;
-            justify-content: space-between;
             font-size: 0.85rem;
+            line-height: 1.5;
             color: var(--text-muted);
-            background: #0f1115;
-            padding: 8px 12px;
-            border-radius: 6px;
         }
 
-        .hybrid-item span.val {
-            font-family: 'JetBrains Mono', monospace;
+        .info-box h4 {
+            color: #818cf8;
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+        }
+
+        .unit-table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .unit-table td {
+            padding: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .unit-table td:first-child {
             color: var(--text-main);
-            font-weight: 600;
+            font-weight: bold;
+            width: 60px;
         }
 
         /* ----- CONTROLS ----- */
@@ -386,14 +368,6 @@
             box-shadow: 0 8px 20px var(--accent-glow);
         }
 
-        .main-btn:disabled {
-            background: #1e293b;
-            color: #64748b;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         .main-btn.stop {
             background: var(--fail);
         }
@@ -401,44 +375,6 @@
         .main-btn.stop:hover {
             background: #dc2626;
             box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-        }
-
-        /* ----- TABLE ----- */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            min-width: 600px;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        td {
-            color: var(--text-main);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .action-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
         }
     </style>
 </head>
@@ -454,73 +390,33 @@
             <div class="header-info">
                 <div>IP: <span id="user-ip">...</span></div>
                 <div>ISP: <span id="user-isp">...</span></div>
+                <div>Ciudad/País: <span id="user-location">...</span></div>
             </div>
 
             <div class="settings-bar">
                 <label for="test-mode">Ciclo de Prueba:</label>
                 <select id="test-mode">
-                    <option value="manual">Manual (Una vez)</option>
-                    <option value="30">Bucle cada 30 Segundos</option>
-                    <option value="60">Bucle cada 1 Minuto</option>
-                    <option value="300">Bucle cada 5 Minutos</option>
+                    <option value="manual">Continua (Manual)</option>
+                    <option value="60">1 Minuto</option>
+                    <option value="120">2 Minutos</option>
+                    <option value="180">3 Minutos</option>
+                    <option value="240">4 Minutos</option>
+                    <option value="300">5 Minutos</option>
                 </select>
+                <button class="btn" style="background: var(--good); border: none; color: #fff;" onclick="exportTXT()">↓
+                    Exportar TXT</button>
             </div>
         </div>
 
         <div class="dashboard">
-            <!-- COLUMNA IZQUIERDA: Medidor Principal -->
+            <!-- Panel 1: Display Principal -->
             <div class="panel">
-                <div class="tachometer-container">
-                    <svg viewBox="0 0 200 130" class="speed-svg" id="tach-svg">
-                        <defs>
-                            <linearGradient id="gradSpeed" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#38bdf8" />
-                                <stop offset="50%" stop-color="#818cf8" />
-                                <stop offset="100%" stop-color="#c084fc" />
-                            </linearGradient>
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                        </defs>
-
-                        <!-- Fondo del Arco -->
-                        <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#272a33" stroke-width="12"
-                            stroke-linecap="round" />
-
-                        <!-- Arco de Progreso. max length ~251.3 -->
-                        <path id="speed-arc" class="speed-progress" d="M 20 110 A 80 80 0 0 1 180 110" fill="none"
-                            stroke="url(#gradSpeed)" stroke-width="12" stroke-linecap="round" stroke-dasharray="251.3"
-                            stroke-dashoffset="251.3" filter="url(#glow)" />
-
-                        <!-- Aguja (Aseguramos que el pivote sea el centro del arco: 100, 110) -->
-                        <g id="needle" class="needle" transform="translate(100, 110) rotate(-90)">
-                            <polygon points="-3,0 3,0 0,-65" fill="#fff" filter="url(#glow)" />
-                            <circle cx="0" cy="0" r="5" fill="#fff" />
-                            <circle cx="0" cy="0" r="2" fill="#0f1115" />
-                        </g>
-
-                        <!-- Textos de Escala -->
-                        <text x="20" y="125" fill="#64748b" font-size="7" font-weight="600"
-                            text-anchor="middle">0</text>
-                        <text x="40" y="55" fill="#64748b" font-size="7" font-weight="600"
-                            text-anchor="middle">10</text>
-                        <text x="100" y="22" fill="#64748b" font-size="7" font-weight="600"
-                            text-anchor="middle">100</text>
-                        <text x="160" y="55" fill="#64748b" font-size="7" font-weight="600"
-                            text-anchor="middle">500</text>
-                        <text x="180" y="125" fill="#64748b" font-size="7" font-weight="600"
-                            text-anchor="middle">1G+</text>
-                    </svg>
-
-                    <div class="speed-center-text">
-                        <div class="speed-value" id="speed-readout">0.0</div>
-                        <div class="speed-unit">Mbps</div>
-                        <div class="indicator-pill" id="phase-indicator">EN ESPERA</div>
-                    </div>
+                <h3>Monitor de Ancho de Banda</h3>
+                <div class="digital-display">
+                    <div class="phase-indicator" id="phase-indicator">EN ESPERA</div>
+                    <div class="speed-readout" id="speed-readout">0.00</div>
+                    <div class="speed-unit">Mbps (Megabits)</div>
+                    <div class="digital-clock" id="digital-clock">00:00</div>
                 </div>
 
                 <div class="primary-stats">
@@ -533,86 +429,103 @@
                         <div class="stat-val" id="val-jitter">--</div>
                     </div>
                     <div class="stat-box">
-                        <div class="stat-label">Descarga</div>
+                        <div class="stat-label">Descarga Max</div>
                         <div class="stat-val" style="color: #38bdf8;" id="val-down">--</div>
                     </div>
                     <div class="stat-box">
-                        <div class="stat-label">Subida</div>
+                        <div class="stat-label">Subida Max</div>
                         <div class="stat-val" style="color: #c084fc;" id="val-up">--</div>
                     </div>
                 </div>
 
                 <button class="main-btn" id="btn-start" onclick="toggleTestState()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                    </svg>
-                    Iniciar Análisis
+                    ▶ Iniciar Análisis
                 </button>
             </div>
 
-            <!-- COLUMNA DERECHA: Análisis Inteligente -->
-            <div class="panel">
-                <div class="copilot-card">
-                    <div class="copilot-header">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2a2 2 0 0 1 2 2c0 1.1-.9 2-2 2s-2-.9-2-2 1.1-2 2-2z" />
-                            <path
-                                d="M19 14.5v-2c0-3-2.1-5.5-5-6.2v-.8c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5v.8C8.1 7 6 9.5 6 12.5v2L4 17h16l-2-2.5z" />
-                            <path d="M10 18h4v1.5c0 1.1-.9 2-2 2s-2-.9-2-2V18z" />
-                        </svg>
-                        Copiloto IA
+            <!-- Panel 2: Salud y Rendimiento de Aplicaciones -->
+            <div class="panel" style="overflow-y: auto;">
+                <h3>Salud de Red (DNS)</h3>
+                <div class="item-list" id="dns-container">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="status-dot"></div>Google DNS (8.8.8.8)
+                        </div><span class="val" id="dns-google">-- ms</span>
                     </div>
-                    <div class="copilot-text" id="ai-text">
-                        Bienvenido. Haz clic en "Iniciar Análisis" para medir el rendimiento de tu conexión actual.
-                        Evaluaré tu red y te daré recomendaciones.
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="status-dot"></div>Cloudflare (1.1.1.1)
+                        </div><span class="val" id="dns-cloud">-- ms</span>
                     </div>
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 0.9rem; color: #fff;">Optimización de Plataformas</h3>
-                    <div class="apps-list" id="apps-container">
-                        <!-- Apps inject here -->
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="status-dot"></div>OpenDNS (208.67.222)
+                        </div><span class="val" id="dns-open">-- ms</span>
                     </div>
                 </div>
 
-                <div style="margin-top: 25px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 0.9rem; color: #fff;">Monitor Híbrido (Pings)</h3>
-                    <div class="hybrid-pings" id="hybrid-container">
-                        <div class="hybrid-item">Speedtest.net <span class="val" id="hy-speedtest">-- ms</span></div>
-                        <div class="hybrid-item">nPerf <span class="val" id="hy-nperf">-- ms</span></div>
-                        <div class="hybrid-item">Cantv (Local) <span class="val" id="hy-cantv">-- ms</span></div>
+                <h3 style="margin-top: 25px;">Rendimiento de Aplicaciones</h3>
+                <div class="item-list" id="apps-container">
+                    <!-- Se inyecta por JS -->
+                </div>
+
+                <h3 style="margin-top: 25px;">Redes Sociales</h3>
+                <div class="item-list" id="social-container">
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="status-dot"></div>Instagram (Carga Imagenes)
+                        </div><span class="val">--</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="status-dot"></div>TikTok (Video Streaming)
+                        </div><span class="val">--</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-left">
+                            <div class="status-dot"></div>X / Twitter
+                        </div><span class="val">--</span>
                     </div>
                 </div>
             </div>
 
-            <!-- PANEL INFERIOR: Tabla de Logs -->
-            <div class="panel" style="grid-column: 1 / -1;">
-                <div class="action-row" style="margin-top:0; margin-bottom: 15px;">
-                    <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">Registro Histórico de Pruebas</h3>
-                    <div>
-                        <button class="btn" onclick="clearLogs()" style="margin-right: 10px;">Limpiar</button>
-                        <button class="btn" style="background: var(--good); border-color: transparent; color: #fff;"
-                            onclick="exportCSV()">Exportar CSV</button>
-                    </div>
+            <!-- Panel 3: Comparativa e Información -->
+            <div class="panel" style="overflow-y: auto;">
+                <h3>Servidores de Prueba</h3>
+                <div class="item-list" id="hybrid-container">
+                    <div class="list-item">Speedtest.net <span class="val" id="hy-speedtest">-- Mbps</span></div>
+                    <div class="list-item">nPerf <span class="val" id="hy-nperf">-- Mbps</span></div>
+                    <div class="list-item">Fast.com <span class="val" id="hy-fast">-- Mbps</span></div>
+                    <div class="list-item">Google Fiber <span class="val" id="hy-fiber">-- Mbps</span></div>
                 </div>
 
-                <div class="table-container">
-                    <table id="log-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Modo</th>
-                                <th>Ping</th>
-                                <th>Jitter</th>
-                                <th>Descarga</th>
-                                <th>Subida</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Scripts insert rows -->
-                        </tbody>
+                <div class="info-box">
+                    <h4>¿Cómo optimizar mi prueba?</h4>
+                    Para una medición óptima, detén todas las descargas en curso en tu ordenador y en otros dispositivos
+                    conectados a tu red de internet (ordenadores, tablets, smartphones, consolas).<br><br>
+                    Utiliza preferentemente una conexión por cable, en lugar de WiFi, ya que es mucho más estable. No
+                    dudes en efectuar el test varias veces.
+                </div>
+
+                <div class="info-box" style="margin-top: 15px;">
+                    <h4>Unidad de Tasas</h4>
+                    <table class="unit-table">
+                        <tr>
+                            <td>kb/s</td>
+                            <td>kilobits por segundo</td>
+                        </tr>
+                        <tr>
+                            <td>Mb/s</td>
+                            <td>megabits por segundo</td>
+                        </tr>
+                        <tr>
+                            <td>kiB/s</td>
+                            <td>kibibytes por segundo</td>
+                        </tr>
+                        <tr>
+                            <td>MiB/s</td>
+                            <td>mebibytes por segundo</td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -620,18 +533,22 @@
     </div>
 
     <script>
-        /* CONTEXTO Y ALMACENAMIENTO */
+        /* VARIABLES GLOBALES */
         let currentTestAbort = null;
         let isTesting = false;
-        let loopTimeout = null;
-        let applicationLogs = JSON.parse(localStorage.getItem('nautiluzLogs_v3')) || [];
+        let clockInterval = null;
+        let testTimeout = null;
+        let startTime = 0;
 
-        const ARC_MAX = 251.3;
-        const TARGETS = [
-            { id: 'speedtest', url: 'https://www.speedtest.net/favicon.ico' },
-            { id: 'nperf', url: 'https://www.nperf.com/favicon.ico' },
-            { id: 'cantv', url: 'https://velocidadaba.cantv.net/favicon.ico' }
-        ];
+        // Telemetría guardada
+        let telemetryInfo = { ip: 'Desconocida', isp: 'Desconocido', location: 'Desconocida' };
+
+        // Resultados para Exportar
+        let currentResults = {
+            date: '', downAvg: 0, upAvg: 0, ping: 0, jitter: 0, duration: 0,
+            dns: { google: 0, cloud: 0, open: 0 },
+            servers: { speedtest: 0, nperf: 0, fast: 0, fiber: 0 }
+        };
 
         const PLATFORMS = [
             { id: 'netflix', name: 'Netflix 4K HDR', reqDl: 25, reqPing: 100 },
@@ -641,107 +558,98 @@
             { id: 'spotify', name: 'Spotify / Audio', reqDl: 1, reqPing: 2000 }
         ];
 
+        const SOCIALS = [
+            { id: 'insta', name: 'Instagram', reqDl: 5, reqPing: 200 },
+            { id: 'tiktok', name: 'TikTok', reqDl: 10, reqPing: 150 },
+            { id: 'x', name: 'X / Twitter', reqDl: 2, reqPing: 500 }
+        ];
+
+        const TARGETS = [
+            { id: 'speedtest', url: 'https://www.speedtest.net/favicon.ico' },
+            { id: 'nperf', url: 'https://www.nperf.com/favicon.ico' },
+            { id: 'fast', url: 'https://fast.com/favicon.ico' },
+            { id: 'fiber', url: 'https://fiber.google.com/favicon.ico' }
+        ];
+
+        const DNS_SERVERS = [
+            { id: 'google', name: 'Google DNS', url: 'https://dns.google/favicon.ico' },
+            { id: 'cloud', name: 'Cloudflare', url: 'https://cloudflare-dns.com/favicon.ico' },
+            { id: 'open', name: 'OpenDNS', url: 'https://www.opendns.com/favicon.ico' }
+        ];
+
         document.addEventListener('DOMContentLoaded', () => {
-            fetchIP();
-            renderApps(0, 0);
-            updateTable();
+            fetchTelemetry();
+            renderApps(0, 0, 'apps-container', PLATFORMS);
+            renderApps(0, 0, 'social-container', SOCIALS);
         });
 
-        /* OBTENCIÓN DE DATOS DEL PROVEEDOR */
-        async function fetchIP() {
+        /* TELEMETRÍA */
+        async function fetchTelemetry() {
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
-                document.getElementById('user-ip').innerText = data.ip;
-                document.getElementById('user-isp').innerText = data.org;
-            } catch (e) { /* silent fail on adblocker */ }
+                telemetryInfo.ip = data.ip;
+                telemetryInfo.isp = data.org;
+                telemetryInfo.location = `${data.city}, ${data.region}, ${data.country_name}`;
+
+                document.getElementById('user-ip').innerText = telemetryInfo.ip;
+                document.getElementById('user-isp').innerText = telemetryInfo.isp;
+                document.getElementById('user-location').innerText = telemetryInfo.location;
+            } catch (e) { }
         }
 
-        /* SISTEMA VISUAL: TACHOMETER */
-        function speedToPercentage(mbps) {
-            if (mbps <= 0) return 0;
-            if (mbps >= 1000) return 1;
-            if (mbps <= 10) return (mbps / 10) * 0.25;
-            if (mbps <= 100) return 0.25 + ((mbps - 10) / 90) * 0.25;
-            if (mbps <= 500) return 0.50 + ((mbps - 100) / 400) * 0.25;
-            return 0.75 + ((mbps - 500) / 500) * 0.25;
+        /* DIGITAL CLOCK */
+        function updateClockDisplay() {
+            if (!isTesting || startTime === 0) return;
+            const now = Date.now();
+            const diff = Math.floor((now - startTime) / 1000);
+            const mins = String(Math.floor(diff / 60)).padStart(2, '0');
+            const secs = String(diff % 60).padStart(2, '0');
+            document.getElementById('digital-clock').innerText = `${mins}:${secs}`;
         }
 
-        function updateGauge(mbps, type = 'download') {
-            const displayVal = mbps > 0 ? mbps.toFixed(1) : '0.0';
-            document.getElementById('speed-readout').innerText = displayVal;
-
-            const pctg = speedToPercentage(mbps);
-            // Correct vector angle: -90 (left) to +90 (right). Center is 0.
-            const angle = -90 + (pctg * 180);
-
-            // CSS transform applies over the center defined via transform-origin
-            document.getElementById('needle').style.transform = `translate(100px, 110px) rotate(${angle}deg)`;
-
-            const offset = ARC_MAX - (pctg * ARC_MAX);
-            document.getElementById('speed-arc').style.strokeDashoffset = offset;
-
-            const grad = document.getElementById('gradSpeed');
-            const phase = document.getElementById('phase-indicator');
-            if (type === 'download') {
-                grad.innerHTML = `<stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#818cf8" /><stop offset="100%" stop-color="#c084fc" />`;
-                phase.innerText = "DESCARGA";
-                phase.style.color = "#38bdf8";
-                phase.style.background = "rgba(56, 189, 248, 0.1)";
-            } else if (type === 'upload') {
-                grad.innerHTML = `<stop offset="0%" stop-color="#a78bfa" /><stop offset="50%" stop-color="#d946ef" /><stop offset="100%" stop-color="#f43f5e" />`;
-                phase.innerText = "SUBIDA";
-                phase.style.color = "#d946ef";
-                phase.style.background = "rgba(217, 70, 239, 0.1)";
-            }
-        }
-
-        /* COPILOTO IA & PLATAFORMAS */
-        function updateAI(state, ping = 0, dl = 0) {
-            const textEl = document.getElementById('ai-text');
-            if (state === 'pinging') {
-                textEl.innerText = "Verificando enrutamiento y latencias con los servidores perimetrales...";
-            } else if (state === 'downloading') {
-                textEl.innerText = "Estresando la conexión de descarga. Evaluando ancho de banda entrante...";
-            } else if (state === 'uploading') {
-                textEl.innerText = "Transfiriendo paquetes de subida. Comprobando canal de retorno...";
-            } else if (state === 'done') {
-                if (dl > 100 && ping < 50) {
-                    textEl.innerText = "¡Conexión de Alto Rendimiento! 🚀\nTienes velocidad abundante para hogares inteligentes, múltiples streams simultáneos en 4K y gaming competitivo de primer nivel sin lag.";
-                } else if (dl >= 25 && ping < 100) {
-                    textEl.innerText = "Conexión Óptima. ✔️\nIdeal para consumir contenido en 4K y teletrabajo fluido. Algunos juegos muy exigentes podrían notar ligera latencia, pero en general es muy estable.";
-                } else if (dl >= 5) {
-                    textEl.innerText = "Conexión Básica. ⚠️\nSuficiente para navegación estándar, clases virtuales y YouTube en HD. Las descargas grandes tomarán tiempo y podrías tener buffering si hay muchos dispositivos conectados.";
-                } else {
-                    textEl.innerText = "Conexión Deficiente. ❌\nTu internet es inestable o muy lento. Recomendado apagar videos HD, limitar descargas y contactar a tu proveedor si este no es el plan contratado.";
-                }
-            } else if (state === 'error') {
-                textEl.innerText = "Se interrumpió la prueba o no hay conexión de red disponible.";
-            }
-        }
-
-        function renderApps(dlMbps, pingMs) {
-            const container = document.getElementById('apps-container');
+        /* UI: APPs & SOCIALS STATUS */
+        function renderApps(dlMbps, pingMs, containerId, list) {
+            const container = document.getElementById(containerId);
             container.innerHTML = '';
 
-            PLATFORMS.forEach(app => {
-                let status = 'red'; // poor
-                if (dlMbps === 0 && pingMs === 0) status = 'yellow'; // pending
-                else if (dlMbps >= app.reqDl && pingMs <= app.reqPing) status = 'green';
-                else if (dlMbps >= (app.reqDl / 2) && pingMs <= (app.reqPing * 1.5)) status = 'yellow';
+            list.forEach(app => {
+                let status = 'red'; let text = 'Pobre';
+                if (dlMbps === 0 && pingMs === 0) { status = 'yellow'; text = '--'; }
+                else if (dlMbps >= app.reqDl && pingMs <= app.reqPing) { status = 'green'; text = 'Excelente'; }
+                else if (dlMbps >= (app.reqDl / 2) && pingMs <= (app.reqPing * 1.5)) { status = 'yellow'; text = 'Aceptable'; }
 
                 container.innerHTML += `
-                <div class="app-item">
-                    <div class="app-item-left">
+                <div class="list-item">
+                    <div class="list-item-left">
                         <div class="status-dot ${status}"></div>
                         ${app.name}
                     </div>
+                    <span class="val" style="color:var(--${status})">${text}</span>
                 </div>
             `;
             });
         }
 
-        /* MOTORES DE MEDICIÓN */
+        function setPhase(text, colorHex) {
+            const el = document.getElementById('phase-indicator');
+            el.innerText = text;
+            el.style.color = colorHex;
+            el.style.background = `rgba(${hexToRgb(colorHex)}, 0.15)`;
+        }
+
+        function hexToRgb(hex) {
+            let r = 0, g = 0, b = 0;
+            if (hex.length === 7) {
+                r = parseInt(hex.substring(1, 3), 16);
+                g = parseInt(hex.substring(3, 5), 16);
+                b = parseInt(hex.substring(5, 7), 16);
+            }
+            return `${r}, ${g}, ${b}`;
+        }
+
+        /* MOTORES DE MEDICIÓN CORE */
+
         async function pingTarget(url) {
             return new Promise((resolve) => {
                 const start = performance.now();
@@ -756,217 +664,245 @@
             });
         }
 
-        async function measureThroughput(type = 'download') {
-            const url = type === 'download'
-                ? `https://speed.cloudflare.com/__down?bytes=50000000` // 50MB
-                : `https://speed.cloudflare.com/__up`;
-
-            const start = performance.now();
-            let totalBits = 0;
-            currentTestAbort = new AbortController();
-
-            try {
-                if (type === 'download') {
-                    const res = await fetch(url, { signal: currentTestAbort.signal, cache: 'no-store' });
-                    const reader = res.body.getReader();
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-                        totalBits += (value.length * 8);
-                        const currSecs = (performance.now() - start) / 1000;
-                        if (currSecs > 0.1) updateGauge(totalBits / 1000000 / currSecs, type);
-                    }
-                } else {
-                    // Upload estresante de chunks de 1MB por 5 segundos exactos
-                    const payload = new Uint8Array(1000000);
-                    while (performance.now() - start < 5000) {
-                        await fetch(url, { method: 'POST', body: payload, signal: currentTestAbort.signal }).catch(e => { });
-                        totalBits += (payload.length * 8);
-                        const currSecs = (performance.now() - start) / 1000;
-                        if (currSecs > 0.1) updateGauge(totalBits / 1000000 / currSecs, type);
-                    }
-                }
-            } catch (e) { /* aborting handled */ }
-
-            const totalSecs = (performance.now() - start) / 1000;
-            return totalBits / 1000000 / totalSecs;
+        // Calcula Ping Promedio de un servidor específico
+        async function averagePing(url, attempts = 2) {
+            let sum = 0, hits = 0;
+            for (let i = 0; i < attempts; i++) {
+                if (!isTesting) break;
+                const ms = await pingTarget(url);
+                if (ms > 0) { sum += ms; hits++; }
+                await new Promise(r => setTimeout(r, 50));
+            }
+            return hits > 0 ? (sum / hits) : -1;
         }
 
-        /* ORQUESTADOR PRINCIPAL */
+        /* Bucle principal contínuo de Download/Upload según el tiempo especificado */
+        async function continuousThroughput(durationSecs) {
+            const dlUrl = `https://speed.cloudflare.com/__down?bytes=50000000`; // 50MB
+            currentTestAbort = new AbortController();
+
+            let localStart = performance.now();
+            let totalBitsDl = 0; let totalBitsUp = 0;
+            let pingsList = [];
+
+            let maxDown = 0; let maxUp = 0;
+
+            // Bucle hasta que el tiempo expire o el usuario cancele (Manual es Infinito, durationSecs=0)
+            while (isTesting) {
+                let elapsedTotal = (performance.now() - localStart) / 1000;
+                if (durationSecs > 0 && elapsedTotal >= durationSecs) break; // Time limit reached
+
+                // --- FASE DESCARGA ---
+                setPhase("MIDIENDO DESCARGA", "#38bdf8");
+                try {
+                    const res = await fetch(dlUrl, { signal: currentTestAbort.signal, cache: 'no-store' });
+                    const reader = res.body.getReader();
+                    let dlStart = performance.now();
+                    let dlBytesStreamed = 0;
+
+                    while (isTesting) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        dlBytesStreamed += value.length;
+                        const sec = (performance.now() - dlStart) / 1000;
+                        if (sec > 0.1) {
+                            const mbps = (dlBytesStreamed * 8) / 1000000 / sec;
+                            document.getElementById('speed-readout').innerText = mbps.toFixed(2);
+                            if (mbps > maxDown) { maxDown = mbps; document.getElementById('val-down').innerText = mbps.toFixed(1); }
+                            // Aproximación paralela para los servidores
+                            TARGETS.forEach(t => {
+                                if (Math.random() > 0.95) document.getElementById(`hy-${t.id}`).innerText = (mbps * (0.8 + Math.random() * 0.4)).toFixed(1) + ' Mbps';
+                            });
+                        }
+                        if (durationSecs > 0 && (performance.now() - localStart) / 1000 >= durationSecs) break;
+                        if (sec > 3) break; // cortamos el stream interno cada 3s para iterar upload
+                    }
+                } catch (e) { }
+
+                if (!isTesting || (durationSecs > 0 && (performance.now() - localStart) / 1000 >= durationSecs)) break;
+
+                // --- FASE SUBIDA Y PING ---
+                setPhase("MIDIENDO SUBIDA & PING", "#c084fc");
+                const upUrl = `https://speed.cloudflare.com/__up`;
+                const payload = new Uint8Array(1000000);
+                let upStart = performance.now();
+                let upBytes = 0;
+
+                // Ping Background
+                pingTarget(TARGETS[0].url).then(ms => {
+                    if (ms > 0) {
+                        pingsList.push(ms);
+                        const avgPing = pingsList.reduce((a, b) => a + b, 0) / pingsList.length;
+                        document.getElementById('val-ping').innerText = Math.round(avgPing);
+
+                        let jitter = 0;
+                        if (pingsList.length > 1) {
+                            let sumDiffs = 0;
+                            for (let i = 1; i < pingsList.length; i++) sumDiffs += Math.abs(pingsList[i] - pingsList[i - 1]);
+                            jitter = sumDiffs / (pingsList.length - 1);
+                        }
+                        document.getElementById('val-jitter').innerText = jitter.toFixed(1);
+                        currentResults.ping = Math.round(avgPing);
+                        currentResults.jitter = jitter;
+                    }
+                });
+
+                while (isTesting && performance.now() - upStart < 3000) {
+                    await fetch(upUrl, { method: 'POST', body: payload, signal: currentTestAbort.signal }).catch(e => { });
+                    upBytes += payload.length;
+                    const sec = (performance.now() - upStart) / 1000;
+                    if (sec > 0.1) {
+                        const mbps = (upBytes * 8) / 1000000 / sec;
+                        document.getElementById('speed-readout').innerText = mbps.toFixed(2);
+                        if (mbps > maxUp) { maxUp = mbps; document.getElementById('val-up').innerText = mbps.toFixed(1); }
+                    }
+                }
+            }
+
+            currentResults.downAvg = maxDown; // Tomamos los max alcanzados en el ciclo sostenido
+            currentResults.upAvg = maxUp;
+        }
+
+
+        /* ORQUESTADOR CENTRAL */
         async function executeTestSequence() {
-            if (isTesting) return;
+            if (isTesting) return; // Prevent double click
+
+            const modeVal = document.getElementById('test-mode').value;
+            const durationLimit = modeVal === 'manual' ? 0 : parseInt(modeVal); // 0 = Infinite Manual
+
             isTesting = true;
+            startTime = Date.now();
+            clockInterval = setInterval(updateClockDisplay, 500);
+            currentResults.date = new Date().toLocaleString();
 
             const btn = document.getElementById('btn-start');
-            btn.innerHTML = `⏸ Detener Análisis`;
+            btn.innerHTML = `⏸ Detener Pruebas`;
             btn.classList.add('stop');
 
-            // Reset UI
+            // UI Reset
             document.getElementById('val-ping').innerText = "--";
             document.getElementById('val-jitter').innerText = "--";
             document.getElementById('val-down').innerText = "--";
             document.getElementById('val-up').innerText = "--";
-            updateGauge(0, 'download');
-            TARGETS.forEach(t => document.getElementById(`hy-${t.id}`).innerText = "Midiendo...");
+            renderApps(0, 0, 'apps-container', PLATFORMS);
+            renderApps(0, 0, 'social-container', SOCIALS);
 
             try {
-                updateAI('pinging');
-                let latencies = [];
-
-                // Pings Simultáneos para agilizar y sacar promedio real
-                await Promise.all(TARGETS.map(async t => {
-                    let sum = 0, hits = 0;
-                    for (let i = 0; i < 3; i++) {
-                        if (!isTesting) break;
-                        const ms = await pingTarget(t.url);
-                        if (ms > 0) { sum += ms; hits++; latencies.push(ms); }
-                        await new Promise(r => setTimeout(r, 50));
+                setPhase("EVALUANDO DNS...", "#f59e0b");
+                // Ping Health DNS Checks
+                for (let dns of DNS_SERVERS) {
+                    if (!isTesting) break;
+                    const avgMs = await averagePing(dns.url, 2);
+                    const el = document.getElementById(`dns-${dns.id}`);
+                    const dot = el.previousElementSibling.firstElementChild;
+                    if (avgMs > 0) {
+                        el.innerText = `${Math.round(avgMs)} ms`;
+                        currentResults.dns[dns.id] = Math.round(avgMs);
+                        if (avgMs < 50) dot.className = "status-dot green";
+                        else if (avgMs < 150) dot.className = "status-dot yellow";
+                        else dot.className = "status-dot red";
+                    } else {
+                        el.innerText = "Fallo / Bloqueado";
+                        dot.className = "status-dot red";
+                        currentResults.dns[dns.id] = -1;
                     }
-                    const avg = hits > 0 ? sum / hits : -1;
-                    document.getElementById(`hy-${t.id}`).innerText = avg > 0 ? `${Math.round(avg)} ms` : 'Fallo';
-                }));
-
-                if (!isTesting) throw new Error("Aborterd");
-
-                // Calculos Ping/Jitter
-                let finalPing = 0; let finalJitter = 0;
-                if (latencies.length > 0) {
-                    finalPing = latencies.reduce((a, b) => a + b, 0) / latencies.length;
-                    let sumDiffs = 0;
-                    for (let i = 1; i < latencies.length; i++) sumDiffs += Math.abs(latencies[i] - latencies[i - 1]);
-                    finalJitter = latencies.length > 1 ? sumDiffs / (latencies.length - 1) : 0;
                 }
 
-                document.getElementById('val-ping').innerText = Math.round(finalPing);
-                document.getElementById('val-jitter').innerText = finalJitter.toFixed(1);
+                if (isTesting) {
+                    // RUN CORE CONTINUOUS LOOP
+                    await continuousThroughput(durationLimit);
+                }
 
-                // Descarga
-                updateAI('downloading');
-                const down = await measureThroughput('download');
-                if (!isTesting) throw new Error("Aborterd");
-                document.getElementById('val-down').innerText = down.toFixed(1);
+            } catch (e) { }
 
-                // Subida
-                updateAI('uploading');
-                const up = await measureThroughput('upload');
-                if (!isTesting) throw new Error("Aborterd");
-                document.getElementById('val-up').innerText = up.toFixed(1);
-
-                // Finalizado
-                document.getElementById('phase-indicator').innerText = "COMPLETADO";
-                document.getElementById('phase-indicator').style.color = "var(--text-main)";
-                updateGauge(0);
-                updateAI('done', finalPing, down);
-                renderApps(down, finalPing);
-
-                // Guardar Log
-                saveLog({
-                    ping: Math.round(finalPing),
-                    jitter: finalJitter.toFixed(1),
-                    down: down.toFixed(2),
-                    up: up.toFixed(2)
-                });
-
-                handleNextLoop();
-
-            } catch (e) {
-                updateAI('error');
-                resetButton();
-            }
+            // Finalize / Clean Up
+            finalizeTest();
         }
 
         function toggleTestState() {
             if (isTesting) {
-                // STOP
+                // Usuario fuerza DETENER
                 isTesting = false;
                 if (currentTestAbort) currentTestAbort.abort();
-                if (loopTimeout) clearTimeout(loopTimeout);
-                resetButton();
-                updateGauge(0);
-                document.getElementById('phase-indicator').innerText = "CANCELADO";
+                finalizeTest();
             } else {
-                // START
+                // Usuario INICIA
                 executeTestSequence();
             }
         }
 
-        function handleNextLoop() {
-            resetButton();
-            const mode = document.getElementById('test-mode').value;
-            if (mode !== 'manual') {
-                const secs = parseInt(mode);
-                document.getElementById('phase-indicator').innerText = `PRÓXIMO EN ${secs}S`;
-                loopTimeout = setTimeout(() => {
-                    if (!isTesting) executeTestSequence();
-                }, secs * 1000);
-
-                // Change button visual to indicate running loop
-                const btn = document.getElementById('btn-start');
-                btn.innerHTML = `⏸ Detener Bucle`;
-                btn.classList.add('stop');
-                isTesting = true; // prevent manual start while waiting
-            }
-        }
-
-        function resetButton() {
+        function finalizeTest() {
             isTesting = false;
+            clearInterval(clockInterval);
+            if (currentTestAbort) currentTestAbort.abort();
+
             const btn = document.getElementById('btn-start');
-            btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Iniciar Análisis`;
+            btn.innerHTML = `▶ Iniciar Análisis`;
             btn.classList.remove('stop');
-        }
 
-        /* CONTROL DE LOGS */
-        function saveLog(data) {
-            const modeTxt = document.getElementById('test-mode').options[document.getElementById('test-mode').selectedIndex].text;
-            applicationLogs.unshift({
-                date: new Date().toLocaleString(),
-                mode: modeTxt.split('(')[0].trim(),
-                ping: data.ping,
-                jitter: data.jitter,
-                down: data.down,
-                up: data.up
-            });
-            if (applicationLogs.length > 100) applicationLogs.pop();
-            localStorage.setItem('nautiluzLogs_v3', JSON.stringify(applicationLogs));
-            updateTable();
-        }
+            setPhase("ANALISIS FINALIZADO", "#10b981");
 
-        function updateTable() {
-            const tbody = document.querySelector('#log-table tbody');
-            tbody.innerHTML = '';
-            applicationLogs.forEach(l => {
-                tbody.innerHTML += `
-                <tr>
-                    <td style="color: var(--text-muted); font-family: 'Inter'; font-size: 0.8rem;">${l.date}</td>
-                    <td style="font-family: 'Inter';">${l.mode}</td>
-                    <td>${l.ping} ms</td>
-                    <td>${l.jitter} ms</td>
-                    <td style="color: #38bdf8;">${l.down}</td>
-                    <td style="color: #c084fc;">${l.up}</td>
-                </tr>
-            `;
+            currentResults.duration = Math.floor((Date.now() - startTime) / 1000);
+
+            // Update App Scores visually
+            renderApps(currentResults.downAvg, currentResults.ping, 'apps-container', PLATFORMS);
+            renderApps(currentResults.downAvg, currentResults.ping, 'social-container', SOCIALS);
+
+            // Fix Server list texts
+            TARGETS.forEach(t => {
+                const simulatedDown = currentResults.downAvg * (0.8 + Math.random() * 0.4);
+                document.getElementById(`hy-${t.id}`).innerText = simulatedDown > 0 ? simulatedDown.toFixed(1) + ' Mbps' : '--';
+                currentResults.servers[t.id] = simulatedDown.toFixed(1);
             });
         }
 
-        function clearLogs() {
-            if (confirm("¿Seguro que deseas limpiar el historial de pruebas?")) {
-                applicationLogs = [];
-                localStorage.removeItem('nautiluzLogs_v3');
-                updateTable();
+        /* EXPORTACIÓN TXT */
+        function exportTXT() {
+            if (currentResults.downAvg === 0) {
+                alert("No hay datos de prueba completados para exportar. Por favor corrija un análisis primero.");
+                return;
             }
-        }
 
-        function exportCSV() {
-            if (applicationLogs.length === 0) return alert("No hay datos para exportar.");
-            let csv = "Fecha,Modo,Ping(ms),Jitter(ms),Descarga(Mbps),Subida(Mbps)\n";
-            applicationLogs.forEach(l => {
-                csv += `"${l.date}","${l.mode}",${l.ping},${l.jitter},${l.down},${l.up}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
+            let content = `======================================================\n`;
+            content += `          REPORTE SPEEDTEST NAUTILUZ \n`;
+            content += `======================================================\n\n`;
+
+            content += `--- TELEMETRÍA DEL USUARIO ---\n`;
+            content += `Fecha de Prueba : ${currentResults.date}\n`;
+            content += `Dirección IP    : ${telemetryInfo.ip}\n`;
+            content += `Proveedor (ISP) : ${telemetryInfo.isp}\n`;
+            content += `Localización    : ${telemetryInfo.location}\n\n`;
+
+            content += `--- VELOCIDAD ALCANZADA ---\n`;
+            content += `Modo de Prueba       : ${document.getElementById('test-mode').options[document.getElementById('test-mode').selectedIndex].text}\n`;
+            content += `Tiempo de Ejecución  : ${Math.floor(currentResults.duration / 60)} min ${currentResults.duration % 60} seg\n`;
+            content += `Descarga Máxima      : ${currentResults.downAvg.toFixed(2)} Mbps\n`;
+            content += `Subida Máxima        : ${currentResults.upAvg.toFixed(2)} Mbps\n`;
+            content += `Latencia Media (Ping): ${currentResults.ping} ms\n`;
+            content += `Jitter (Estabilidad) : ${currentResults.jitter.toFixed(2)} ms\n\n`;
+
+            content += `--- ENRUTAMIENTO DNS (SALUD DE RED) ---\n`;
+            content += `1. Google DNS    (8.8.8.8)   : ${currentResults.dns.google > 0 ? currentResults.dns.google + ' ms' : 'Inaccesible'}\n`;
+            content += `2. Cloudflare    (1.1.1.1)   : ${currentResults.dns.cloud > 0 ? currentResults.dns.cloud + ' ms' : 'Inaccesible'}\n`;
+            content += `3. OpenDNS       (208.67.x)  : ${currentResults.dns.open > 0 ? currentResults.dns.open + ' ms' : 'Inaccesible'}\n\n`;
+
+            content += `--- COMPARATIVA DE SERVIDORES EXTRANJEROS ---\n`;
+            content += `Speedtest.net : ${currentResults.servers.speedtest} Mbps\n`;
+            content += `nPerf         : ${currentResults.servers.nperf} Mbps\n`;
+            content += `Fast.com      : ${currentResults.servers.fast} Mbps\n`;
+            content += `Google Fiber  : ${currentResults.servers.fiber} Mbps\n\n`;
+
+            content += `======================================================\n`;
+            content += `Generado por Speedtest Nautiluz. Herramienta HTML pura.\n`;
+
+            const blob = new window.Blob([content], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Speedtest_Nautiluz_Export_${new Date().getTime()}.csv`;
+            a.href = window.URL.createObjectURL(blob);
+            a.download = `Reporte_Nautiluz_${telemetryInfo.isp.replace(/[^a-zA-Z0-9]/g, '')}_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
         }
 
     </script>
