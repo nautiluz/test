@@ -1,354 +1,879 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor de Estabilidad de Internet</title>
+    <title>Monitor de Internet | Speedometer Pro</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap');
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #0f172a; 
-            color: #f8fafc; 
-            margin: 0; 
-            padding: 20px; 
+        :root {
+            --bg-dark: #070b14;
+            --panel-bg: #111827;
+            --panel-border: #1f2937;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-blue: #3b82f6;
+            --glow-blue: rgba(59, 130, 246, 0.5);
+            --good: #10b981;
+            --warn: #f59e0b;
+            --fail: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-dark) 50%);
         }
-        .container { 
+
+        .container {
             width: 100%;
-            max-width: 900px; 
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-        .header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            margin-bottom: 30px; 
-            flex-wrap: wrap;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
-        h1 { margin: 0; font-size: 1.8rem; color: #38bdf8; }
-        
-        /* Semáforo (Traffic Light) */
-        .traffic-light { 
-            display: flex; 
-            gap: 15px; 
-            background: #0f172a; 
-            padding: 15px 25px; 
-            border-radius: 30px; 
-            box-shadow: inset 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .light { 
-            width: 25px; 
-            height: 25px; 
-            border-radius: 50%; 
-            background: #334155; 
-            transition: all 0.4s ease; 
-        }
-        .light.red.active { background: #ef4444; box-shadow: 0 0 20px #ef4444; }
-        .light.yellow.active { background: #f59e0b; box-shadow: 0 0 20px #f59e0b; }
-        .light.green.active { background: #10b981; box-shadow: 0 0 20px #10b981; }
 
-        /* Tarjetas de Estadísticas */
-        .stats { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 20px; 
-            margin-bottom: 30px; 
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--panel-bg);
+            padding: 20px 30px;
+            border-radius: 16px;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .stat-card { 
-            background: #334155; 
-            padding: 25px; 
-            border-radius: 12px; 
-            text-align: center; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-card h3 { margin: 0 0 10px 0; font-size: 1rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;}
-        .stat-card p { margin: 0; font-size: 2rem; font-weight: 800; color: #f8fafc; }
+
+        h1 span {
+            color: var(--accent-blue);
+        }
+
+        /* Semáforo Top */
+        .traffic-light {
+            display: flex;
+            gap: 12px;
+            background: #000;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid #333;
+        }
+
+        .light {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #333;
+            transition: all 0.3s;
+        }
+
+        .light.red.active {
+            background: var(--fail);
+            box-shadow: 0 0 15px var(--fail);
+        }
+
+        .light.yellow.active {
+            background: var(--warn);
+            box-shadow: 0 0 15px var(--warn);
+        }
+
+        .light.green.active {
+            background: var(--good);
+            box-shadow: 0 0 15px var(--good);
+        }
+
+        /* Configuración de Prueba */
+        .test-config {
+            display: flex;
+            gap: 15px;
+            background: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .test-config label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .test-config select {
+            background: #1f2937;
+            color: white;
+            border: 1px solid #374151;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Inter';
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Provider Info */
+        .provider-info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        .provider-item span {
+            color: #fff;
+            font-weight: bold;
+            font-family: 'JetBrains Mono';
+        }
+
+        /* Main Dashboard Area */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .provider-info {
+                margin-left: 0;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Tacómetro / Speedometer */
+        .tachometer-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px 0 0 0;
+        }
+
+        .speed-svg {
+            width: 100%;
+            max-width: 380px;
+            overflow: visible;
+        }
+
+        .needle {
+            transform-origin: 100px 100px;
+            transform: rotate(-90deg);
+            transition: transform 0.1s ease-out;
+        }
+
+        .speed-progress {
+            transition: stroke-dashoffset 0.1s ease-out;
+        }
+
+        .speed-text-center {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .speed-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 20px var(--glow-blue);
+            line-height: 1;
+        }
+
+        .speed-unit {
+            font-size: 1rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .test-type-indicator {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .test-type-indicator.download {
+            color: #38bdf8;
+        }
+
+        .test-type-indicator.upload {
+            color: #c084fc;
+        }
+
+        /* Estadísticas Adicionales Jitter etc */
+        .advanced-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .adv-stat {
+            text-align: center;
+        }
+
+        .adv-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .adv-stat-val {
+            font-family: 'JetBrains Mono';
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Ping Stats Side */
+        .ping-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ping-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ping-card-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .ping-card-info p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .ping-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--good);
+        }
+
+        .ping-value.bad {
+            color: var(--fail);
+        }
+
+        .ping-value.warn {
+            color: var(--warn);
+        }
+
+        .ping-value.pending {
+            color: var(--text-muted);
+        }
 
         /* Botones */
         .controls {
             display: flex;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        .btn { 
-            background: #3b82f6; 
-            color: white; 
-            border: none; 
-            padding: 12px 25px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            font-weight: 600;
-            transition: background 0.2s;
-            flex: 1;
-        }
-        .btn:hover { background: #2563eb; }
-        .btn.stop { background: #ef4444; }
-        .btn.stop:hover { background: #dc2626; }
-        .clear-btn { background: #64748b; flex: none;}
-        .clear-btn:hover { background: #475569; }
 
-        /* Tabla de Logs */
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 12px;
-            background: #0f172a;
-        }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            min-width: 600px;
-        }
-        th, td { 
-            padding: 15px; 
-            text-align: center; 
-            border-bottom: 1px solid #1e293b; 
-        }
-        th { 
-            background: #0f172a; 
-            color: #94a3b8; 
+        .btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
             text-transform: uppercase;
-            font-size: 0.85rem;
             letter-spacing: 1px;
+            flex: 1;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        tr:hover { background: #1e293b; }
-        
+
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-dl {
+            background: #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            flex: none;
+            width: auto;
+        }
+
+        .btn-dl:hover {
+            background: #059669;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+        }
+
         .status-badge {
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
         }
-        .status-good { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status-warn { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .status-fail { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 
+        .badge-good {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--good);
+        }
+
+        .badge-warn {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warn);
+        }
+
+        .badge-fail {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--fail);
+        }
+
+        .app-status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            min-height: 24px;
+        }
+
+        /* Modal Info Data */
+        .process-log {
+            margin-top: 20px;
+            background: #000;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.8rem;
+            color: #a3be8c;
+            height: 120px;
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid #333;
+        }
+
+        .log-line {
+            margin: 5px 0;
+            border-bottom: 1px solid #111;
+            padding-bottom: 5px;
+        }
+
+        .log-time {
+            color: #888;
+            margin-right: 10px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
-            <h1>📡 Monitor de Estabilidad</h1>
-            <div class="traffic-light" title="Semáforo de estado de conexión">
+            <h1>📡 <span>Velocity</span>Monitor</h1>
+
+            <div class="test-config">
+                <label for="test-duration">Duración del Test:</label>
+                <select id="test-duration">
+                    <option value="5">Rápido (5 seg)</option>
+                    <option value="10" selected>Normal (10 seg)</option>
+                    <option value="20">Preciso (20 seg)</option>
+                </select>
+            </div>
+
+            <div class="traffic-light" title="Estado de Completitud de Prueba">
                 <div class="light red" id="light-red"></div>
                 <div class="light yellow" id="light-yellow"></div>
                 <div class="light green" id="light-green"></div>
             </div>
         </div>
 
-        <div class="stats">
-            <div class="stat-card">
-                <h3>Estado General</h3>
-                <p id="status-text" style="font-size: 1.5rem;">Esperando...</p>
-            </div>
-            <div class="stat-card">
-                <h3>Latencia Media</h3>
-                <p id="avg-ping">-- <span style="font-size: 1rem; color: #94a3b8;">ms</span></p>
-            </div>
-            <div class="stat-card">
-                <h3>Velocidad (Ancho de Banda)</h3>
-                <p id="est-speed">-- <span style="font-size: 1rem; color: #94a3b8;">Mbps</span></p>
-            </div>
-        </div>
+        <div class="dashboard">
+            <!-- Velocímetro Central -->
+            <div class="panel"
+                style="grid-column: 1 / -1; display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; align-items: stretch;">
 
-        <div class="controls">
-            <button class="btn" onclick="toggleMonitoring()" id="monitor-btn">▶ Iniciar Pruebas</button>
-            <button class="btn clear-btn" onclick="clearLogs()">🗑️ Borrar Logs</button>
-        </div>
+                <!-- Columna Izquierda: Tacómetro y Botones -->
+                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center;">
+                    <div class="provider-info" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+                        <div class="provider-item">IP: <span id="user-ip">Buscando...</span></div>
+                        <div class="provider-item">ISP: <span id="user-isp">Buscando...</span></div>
+                    </div>
 
-        <div class="table-wrapper">
-            <table id="log-table">
-                <thead>
-                    <tr>
-                        <th>Servidor</th>
-                        <th>Latencia (ms)</th>
-                        <th>Velocidad (Mbps)</th>
-                        <th>Estado</th>
-                        <th>Fecha / Hora</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Filas dinámicas aquí -->
-                </tbody>
-            </table>
+                    <div class="tachometer-wrapper">
+                        <svg viewBox="0 0 200 130" class="speed-svg" id="tach-svg">
+                            <defs>
+                                <linearGradient id="gradientSpeed" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#38bdf8" />
+                                    <stop offset="50%" stop-color="#818cf8" />
+                                    <stop offset="100%" stop-color="#c084fc" />
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+
+                            <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="#1f2937" stroke-width="14"
+                                stroke-linecap="round" />
+                            <path id="speed-arc" class="speed-progress" d="M 20 110 A 80 80 0 0 1 180 110" fill="none"
+                                stroke="url(#gradientSpeed)" stroke-width="14" stroke-linecap="round"
+                                stroke-dasharray="251.3" stroke-dashoffset="251.3" filter="url(#glow)" />
+                            <g id="needle" class="needle" transform="translate(100, 110) rotate(-90)">
+                                <polygon points="-4,0 4,0 0,-70" fill="#fff" filter="url(#glow)" />
+                                <circle cx="0" cy="0" r="6" fill="#fff" />
+                                <circle cx="0" cy="0" r="3" fill="#070b14" />
+                            </g>
+                            <text x="20" y="125" fill="#6b7280" font-size="7" font-weight="bold"
+                                text-anchor="middle">0</text>
+                            <text x="40" y="55" fill="#6b7280" font-size="7" font-weight="bold"
+                                text-anchor="middle">10</text>
+                            <text x="100" y="20" fill="#6b7280" font-size="7" font-weight="bold"
+                                text-anchor="middle">100</text>
+                            <text x="160" y="55" fill="#6b7280" font-size="7" font-weight="bold"
+                                text-anchor="middle">500</text>
+                            <text x="180" y="125" fill="#6b7280" font-size="7" font-weight="bold"
+                                text-anchor="middle">1G+</text>
+                        </svg>
+
+                        <div class="speed-text-center">
+                            <div class="speed-value" id="speed-readout">0.0</div>
+                            <div class="speed-unit">Mbps</div>
+                            <div class="test-type-indicator" id="test-type-ind">Esperando</div>
+                        </div>
+                    </div>
+
+                    <div class="advanced-stats">
+                        <div class="adv-stat">
+                            <div class="adv-stat-label">Latencia (Ping)</div>
+                            <div class="adv-stat-val" id="final-ping">-- ms</div>
+                        </div>
+                        <div class="adv-stat">
+                            <div class="adv-stat-label">Jitter</div>
+                            <div class="adv-stat-val" id="final-jitter">-- ms</div>
+                        </div>
+                    </div>
+
+                    <div class="app-status" id="app-status">Listo para iniciar</div>
+
+                    <div class="controls">
+                        <button class="btn" id="start-btn" onclick="runSingleTest()">▶ Iniciar Prueba</button>
+                        <button class="btn btn-dl" id="dl-btn" onclick="downloadLogs()" style="display:none;">↓
+                            Descargar Log CSV</button>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Proceso y Stats -->
+                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column;">
+                    <h3 style="margin:0 0 15px 0; font-size: 1.1rem; color: #fff;">Comparativa de Servidores</h3>
+                    <div class="ping-stats" id="ping-container">
+                        <!-- Generado por JS -->
+                    </div>
+
+                    <h3 style="margin:20px 0 10px 0; font-size: 1.1rem; color: #fff;">Terminal de Proceso</h3>
+                    <div class="process-log" id="process-log">
+                        <div class="log-line"><span class="log-time">[${new Date().toLocaleTimeString()}]</span> Sistema
+                            Inicializado. Clic en Iniciar Prueba.</div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <script>
-        // Sitios objetivo para las pruebas de "Ping" por HTTP.
-        const DOMAINS = [
-            { name: 'Speedtest', url: 'https://www.speedtest.net/favicon.ico' },
-            { name: 'nPerf', url: 'https://www.nperf.com/favicon.ico' },
-            { name: 'Cantv', url: 'https://velocidadaba.cantv.net/favicon.ico' } 
+        // Configuración de Servidores para Ping
+        const TARGETS = [
+            { id: 'speedtest', name: 'Speedtest.net', url: 'https://www.speedtest.net/favicon.ico' },
+            { id: 'nperf', name: 'nPerf', url: 'https://www.nperf.com/favicon.ico' },
+            { id: 'cantv', name: 'Cantv (Local)', url: 'https://velocidadaba.cantv.net/favicon.ico' }
         ];
 
-        let monitoringInterval;
-        let isMonitoring = false;
-        // Recuperar logs usando LocalStorage
-        let logs = JSON.parse(localStorage.getItem('internetMonitorLogs_v1')) || [];
+        let testResults = {}; // Almacena el log de la prueba actual o última terminada
+        const ARC_MAX = 251.3;
 
-        function updateUI() {
-            const tbody = document.querySelector('#log-table tbody');
-            tbody.innerHTML = '';
-            
-            let totalPing = 0;
-            let validPings = 0;
-            let currentSpeed = '--';
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPingCards();
+            fetchIPInfo();
+        });
 
-            // Mostrar los últimos 30 registros
-            const recentLogs = logs.slice(-30).reverse();
-            for (let log of recentLogs) {
-                let statusClass = 'status-fail';
-                let statusText = 'Error';
-                
-                if (log.ping > 0 && log.ping < 150) {
-                    statusClass = 'status-good';
-                    statusText = 'Estable';
-                } else if (log.ping >= 150) {
-                    statusClass = 'status-warn';
-                    statusText = 'Lento';
-                }
+        function addLogLine(msg, isError = false) {
+            const term = document.getElementById('process-log');
+            const time = new Date().toLocaleTimeString();
+            const color = isError ? '#ef4444' : '#a3be8c';
+            term.innerHTML += `<div class="log-line" style="color:${color}"><span class="log-time">[${time}]</span> ${msg}</div>`;
+            term.scrollTop = term.scrollHeight; // Auto-scroll
+        }
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-weight: 600; color: #e2e8f0;">${log.server}</td>
-                    <td>${log.ping > 0 ? log.ping : '---'}</td>
-                    <td>${log.speed || '--'}</td>
-                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                    <td style="color: #94a3b8; font-size: 0.9rem;">${log.timestamp}</td>
-                `;
-                tbody.appendChild(tr);
-
-                if (log.ping > 0) {
-                    totalPing += log.ping;
-                    validPings++;
-                }
-            }
-
-            // Calcular media
-            const avgPing = validPings > 0 ? Math.round(totalPing / validPings) : 0;
-            document.getElementById('avg-ping').innerHTML = avgPing > 0 ? `${avgPing} <span style="font-size: 1rem; color: #94a3b8;">ms</span>` : '-- <span style="font-size: 1rem; color: #94a3b8;">ms</span>';
-
-            // Leer ancho de banda estimado desde la API del navegador (Soportado en Chrome/Edge)
-            if (navigator.connection && navigator.connection.downlink) {
-                currentSpeed = navigator.connection.downlink;
-                document.getElementById('est-speed').innerHTML = `${currentSpeed} <span style="font-size: 1rem; color: #94a3b8;">Mbps</span>`;
-            } else {
-                document.getElementById('est-speed').innerHTML = `N/A <span style="font-size: 1rem; color: #94a3b8;">(No sorportado)</span>`;
-            }
-
-            // Actualizar Semáforo
-            document.querySelectorAll('.light').forEach(el => el.classList.remove('active'));
-            
-            if (validPings === 0 && recentLogs.length > 0) {
-                document.getElementById('light-red').classList.add('active');
-                document.getElementById('status-text').innerText = 'Sin Conexión';
-                document.getElementById('status-text').style.color = '#ef4444';
-            } else if (avgPing > 200 || navigator.onLine === false) {
-                document.getElementById('light-yellow').classList.add('active');
-                document.getElementById('status-text').innerText = 'Inestable';
-                document.getElementById('status-text').style.color = '#f59e0b';
-            } else if (avgPing > 0) {
-                document.getElementById('light-green').classList.add('active');
-                document.getElementById('status-text').innerText = 'Excelente';
-                document.getElementById('status-text').style.color = '#10b981';
-            } else {
-                document.getElementById('status-text').innerText = 'Esperando datos...';
-                document.getElementById('status-text').style.color = '#f8fafc';
+        async function fetchIPInfo() {
+            try {
+                addLogLine("Obteniendo datos de IP pública y Proveedor...");
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                document.getElementById('user-ip').innerText = data.ip;
+                document.getElementById('user-isp').innerText = data.org;
+                testResults.ip = data.ip;
+                testResults.isp = data.org;
+                testResults.location = `${data.city}, ${data.country_name}`;
+                addLogLine(`IP detectada: ${data.ip} (${data.org})`);
+            } catch (e) {
+                document.getElementById('user-ip').innerText = "Desconocida";
+                document.getElementById('user-isp').innerText = "Desconocido";
+                addLogLine("No se pudo obtener la IP y el proveedor (posible bloqueo de adblocker).", true);
             }
         }
 
-        // Simula un "Ping" calculando el tiempo que tarda en descargar un recurso (favicon)
-        async function pingServer(server) {
-            return new Promise((resolve) => {
-                const start = performance.now();
-                const img = new Image();
-                img.onload = () => {
-                    resolve(Math.round(performance.now() - start));
-                };
-                img.onerror = () => {
-                    // Si falla por CORS aún puede significar que hubo respuesta de red.
-                    // Para evitar falsos positivos largos, solo lo validamos si fue rápido.
-                    const time = performance.now() - start;
-                    if(time < 2500) resolve(Math.round(time));
-                    else resolve(-1);
-                };
-                // Prevenir caché añadiendo un parámetro numérico aleatorio
-                img.src = `${server.url}?cb=${new Date().getTime()}`;
-                
-                // Timeout de 5 segundos
-                setTimeout(() => resolve(-1), 5000); 
+        function renderPingCards() {
+            const container = document.getElementById('ping-container');
+            container.innerHTML = '';
+            TARGETS.forEach(t => {
+                container.innerHTML += `
+                    <div class="ping-card">
+                        <div class="ping-card-info">
+                            <h4>${t.name}</h4>
+                            <p>Latencia HTTP a Servidor</p>
+                        </div>
+                        <div class="ping-value pending" id="ping-${t.id}">-- ms</div>
+                    </div>
+                `;
             });
         }
 
-        async function runTests() {
-            if(!navigator.onLine) {
-                // Registrar caída total si no hay red
-                logs.push({
-                    timestamp: new Date().toLocaleTimeString(),
-                    server: 'Sistema',
-                    ping: -1,
-                    speed: 0
-                });
-            } else {
-                for (let server of DOMAINS) {
-                    const pingTime = await pingServer(server);
-                    let speed = 0;
-                    if (navigator.connection && navigator.connection.downlink) {
-                        speed = navigator.connection.downlink;
-                    }
-                    
-                    const logEntry = {
-                        timestamp: new Date().toLocaleTimeString(),
-                        server: server.name,
-                        ping: pingTime,
-                        speed: speed
-                    };
+        function speedToPercentage(mbps) {
+            if (mbps <= 0) return 0;
+            if (mbps >= 1000) return 1;
+            if (mbps <= 10) return (mbps / 10) * 0.25;
+            if (mbps <= 100) return 0.25 + ((mbps - 10) / 90) * 0.25;
+            if (mbps <= 500) return 0.50 + ((mbps - 100) / 400) * 0.25;
+            return 0.75 + ((mbps - 500) / 500) * 0.25;
+        }
 
-                    logs.push(logEntry);
+        function setTachometer(mbps, type = "download") {
+            document.getElementById('speed-readout').innerText = mbps > 0 ? mbps.toFixed(1) : '0.0';
+            const pctg = speedToPercentage(mbps);
+            const angle = -90 + (pctg * 180);
+            document.getElementById('needle').style.transform = `translate(100px, 110px) rotate(${angle}deg)`;
+            const offset = ARC_MAX - (pctg * ARC_MAX);
+
+            const arc = document.getElementById('speed-arc');
+            arc.style.strokeDashoffset = offset;
+
+            // Cambiar gradiente según subida o bajada
+            const defs = document.querySelector('#tach-svg defs');
+            const ind = document.getElementById('test-type-ind');
+            if (type === 'download') {
+                defs.innerHTML = `<linearGradient id="gradientSpeed" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#38bdf8" /><stop offset="50%" stop-color="#818cf8" /><stop offset="100%" stop-color="#c084fc" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+                ind.innerText = "DESCARGA";
+                ind.className = "test-type-indicator download";
+            } else if (type === 'upload') {
+                defs.innerHTML = `<linearGradient id="gradientSpeed" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a78bfa" /><stop offset="50%" stop-color="#d946ef" /><stop offset="100%" stop-color="#f43f5e" /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+                ind.innerText = "SUBIDA";
+                ind.className = "test-type-indicator upload";
+            } else {
+                ind.innerText = "";
+            }
+        }
+
+        async function pingDomain(url, retries = 3) {
+            let latencies = [];
+            for (let i = 0; i < retries; i++) {
+                const p = await new Promise((resolve) => {
+                    const start = performance.now();
+                    const img = new Image();
+                    img.onload = () => resolve(performance.now() - start);
+                    img.onerror = () => {
+                        const dur = performance.now() - start;
+                        resolve(dur > 3000 ? -1 : dur);
+                    };
+                    img.src = `${url}?cb=${Date.now()}_${Math.random()}`;
+                    setTimeout(() => resolve(-1), 4000);
+                });
+                if (p > 0) latencies.push(p);
+                await new Promise(r => setTimeout(r, 200)); // pequeña pausa
+            }
+            return latencies;
+        }
+
+        // Calcula Jitter a partir de un arreglo de latencias (variación del retardo)
+        function calculateJitter(latencies) {
+            if (latencies.length < 2) return 0;
+            let sumDiffs = 0;
+            for (let i = 1; i < latencies.length; i++) {
+                sumDiffs += Math.abs(latencies[i] - latencies[i - 1]);
+            }
+            return sumDiffs / (latencies.length - 1);
+        }
+
+        async function measureBandwidth(type = "download", durationSeconds) {
+            const url = type === "download"
+                // Usamos fetch de cloudflare (100MB chunk ficticio que cortamos a los X segundos)
+                ? `https://speed.cloudflare.com/__down?bytes=${100000000}`
+                // Upload endpoint (envia basura generada)
+                : 'https://speed.cloudflare.com/__up';
+
+            const start = performance.now();
+            let totalBytes = 0;
+            const controller = new AbortController();
+
+            // Timeout enforced para la duración que seleccionó el usuario
+            const timeoutId = setTimeout(() => controller.abort(), durationSeconds * 1000);
+
+            try {
+                if (type === "download") {
+                    const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+                    if (!res.ok) throw new Error("CORS Fail");
+                    const reader = res.body.getReader();
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        totalBytes += value.length;
+                        const currSec = (performance.now() - start) / 1000;
+                        if (currSec > 0.1) {
+                            const mbps = (totalBytes * 8) / 1000000 / currSec;
+                            setTachometer(mbps, type);
+                        }
+                    }
+                } else {
+                    // Simular Upload iterativo mediante POST de pedazos de 1MB hasta que el timeout corte
+                    const chunk = new Uint8Array(1000000); // 1 MB
+                    while (performance.now() - start < (durationSeconds * 1000)) {
+                        const upStart = performance.now();
+                        await fetch(url, {
+                            method: 'POST',
+                            body: chunk,
+                            signal: controller.signal
+                        }).catch(e => { if (e.name !== 'AbortError') throw e; });
+                        totalBytes += chunk.length;
+
+                        const currSec = (performance.now() - start) / 1000;
+                        if (currSec > 0.1) {
+                            const mbps = (totalBytes * 8) / 1000000 / currSec;
+                            setTachometer(mbps, type);
+                        }
+                    }
+                }
+
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    addLogLine(`Mecanismo principal falló por bloqueo web (CORS): ${type}. ${e.message}`, true);
+                    return parseFloat(navigator.connection?.downlink || 0); // fallback
+                }
+            } finally {
+                clearTimeout(timeoutId);
+            }
+
+            const trueDuration = (performance.now() - start) / 1000;
+            return (totalBytes * 8) / 1000000 / trueDuration;
+        }
+
+        async function runSingleTest() {
+            if (document.getElementById('start-btn').disabled) return;
+
+            const btn = document.getElementById('start-btn');
+            btn.disabled = true;
+            btn.innerText = "Evaluando...";
+            document.getElementById('dl-btn').style.display = 'none';
+            document.getElementById('app-status').innerText = "Iniciando secuencia corporativa...";
+            document.getElementById('final-ping').innerText = "-- ms";
+            document.getElementById('final-jitter').innerText = "-- ms";
+            setTachometer(0, 'download');
+
+            testResults = { // Reset Log Data
+                date: new Date().toLocaleString(),
+                ip: document.getElementById('user-ip').innerText,
+                isp: document.getElementById('user-isp').innerText,
+                serverComparative: {}
+            };
+
+            updateTrafficLight('yellow');
+            const dur = parseInt(document.getElementById('test-duration').value);
+
+            // 1. PINGS Y JITTER COMPARATIVO
+            addLogLine("--------------------------");
+            addLogLine("Fase 1: Pings y Estabilidad de Enrutamiento...");
+            let allLatencies = [];
+            let r_pings = {};
+
+            for (let t of TARGETS) {
+                document.getElementById(`ping-${t.id}`).innerText = "Midieno...";
+                const lats = await pingDomain(t.url, 4);
+
+                if (lats.length > 0) {
+                    const avg = lats.reduce((a, b) => a + b, 0) / lats.length;
+                    const el = document.getElementById(`ping-${t.id}`);
+                    el.innerText = Math.round(avg) + ' ms';
+                    el.className = 'ping-value ' + (avg < 150 ? 'good' : 'warn');
+                    addLogLine(`Servidor [${t.name}]: Media ${Math.round(avg)}ms (Paquetes: ${lats.length}/4)`);
+
+                    allLatencies.push(...lats);
+                    r_pings[t.name] = Math.round(avg);
+                } else {
+                    document.getElementById(`ping-${t.id}`).innerText = "Falló";
+                    document.getElementById(`ping-${t.id}`).className = 'ping-value bad';
+                    addLogLine(`Servidor [${t.name}]: No alcanzable o bloqueado`, true);
+                    r_pings[t.name] = -1;
                 }
             }
-            // Mantener solo los últimos 500 registros para no llenar el localStorage
-            if(logs.length > 500) logs.splice(0, logs.length - 500);
-            
-            localStorage.setItem('internetMonitorLogs_v1', JSON.stringify(logs));
-            updateUI();
-        }
 
-        function toggleMonitoring() {
-            const btn = document.getElementById('monitor-btn');
-            if (isMonitoring) {
-                clearInterval(monitoringInterval);
-                btn.innerHTML = '▶ Iniciar Pruebas';
-                btn.classList.remove('stop');
+            testResults.serverComparative = r_pings;
+
+            // Calcular Ping General y Jitter General
+            if (allLatencies.length > 0) {
+                const finalPing = allLatencies.reduce((a, b) => a + b, 0) / allLatencies.length;
+                const finalJitter = calculateJitter(allLatencies);
+
+                document.getElementById('final-ping').innerText = Math.round(finalPing) + ' ms';
+                document.getElementById('final-jitter').innerText = finalJitter.toFixed(1) + ' ms';
+
+                testResults.ping = Math.round(finalPing);
+                testResults.jitter = finalJitter.toFixed(1);
+                addLogLine(`=> Resumen: Latencia Media ${Math.round(finalPing)}ms | Jitter ${finalJitter.toFixed(1)}ms`);
             } else {
-                runTests(); 
-                monitoringInterval = setInterval(runTests, 10000); // 10 segundos
-                btn.innerHTML = '⏸ Detener Monitoreo';
-                btn.classList.add('stop');
+                addLogLine("=> Error fatal: Sin conexión a servidores de prueba.", true);
+                updateTrafficLight('red');
+                btn.disabled = false;
+                btn.innerText = "Reintentar";
+                return;
             }
-            isMonitoring = !isMonitoring;
+
+            // 2. DESCARGA
+            addLogLine(`Fase 2: Probando ancho de banda de DESCARGA por ${dur} segs...`);
+            document.getElementById('app-status').innerText = "Midiendo Descarga (Download)...";
+            const downMbps = await measureBandwidth("download", dur);
+            testResults.download = downMbps.toFixed(2);
+            setTachometer(downMbps, 'download');
+            addLogLine(`=> Descarga finalizada: ${testResults.download} Mbps`);
+
+            await new Promise(r => setTimeout(r, 1500)); // pausa dramatica
+            setTachometer(0, 'upload');
+
+            // 3. SUBIDA
+            addLogLine(`Fase 3: Probando ancho de banda de SUBIDA (Upload) por ${dur / 2} segs...`);
+            document.getElementById('app-status').innerText = "Midiendo Subida (Upload)...";
+            // Para la subida damos la mitad del tiempo porque suele saturar rapido los routers
+            const upMbps = await measureBandwidth("upload", dur / 2);
+            testResults.upload = upMbps.toFixed(2);
+            setTachometer(upMbps, 'upload');
+            addLogLine(`=> Subida finalizada: ${testResults.upload} Mbps`);
+
+            // 4. FINALIZAR
+            addLogLine("✅ Secuencia completada. Informe generado listo para descarga.");
+            document.getElementById('app-status').innerText = "Test Completado.";
+            updateTrafficLight('green');
+
+            btn.disabled = false;
+            btn.innerText = "▶ Nuevo Test";
+            document.getElementById('dl-btn').style.display = 'block'; // Mostrar boton para descargar
+
+            // Regresar tacómetro visual
+            setTimeout(() => {
+                const finalAvg = (downMbps + upMbps) / 2;
+                setTachometer(finalAvg, ''); // Solo para mostrar visual el promedio
+                document.getElementById('test-type-ind').innerText = "PROMEDIO";
+                document.getElementById('speed-readout').innerText = `D:${testResults.download} | U:${testResults.upload}`;
+                document.getElementById('speed-readout').style.fontSize = '1.8rem';
+            }, 2500);
         }
 
-        function clearLogs() {
-            if(confirm('¿Estás seguro de que deseas borrar todos los logs guardados?')) {
-                logs = [];
-                localStorage.removeItem('internetMonitorLogs_v1');
-                updateUI();
-            }
+        function updateTrafficLight(color) {
+            document.querySelectorAll('.light').forEach(el => el.classList.remove('active'));
+            if (color) document.getElementById(`light-${color}`).classList.add('active');
         }
 
-        // Inicializar interfaz
-        updateUI();
+        // Generar y Descargar un LOG en texto/csv
+        function downloadLogs() {
+            if (!testResults.download) return; // No hay test completado
+
+            // Construir contenido para el archivo
+            let content = `--- REPORTE DE VELOCIDAD DE INTERNET ---\n`;
+            content += `Fecha de la Prueba: ${testResults.date}\n`;
+            content += `Direccion IP: ${testResults.ip}\n`;
+            content += `Proveedor (ISP): ${testResults.isp}\n`;
+            content += `----------------------------------------\n`;
+            content += `--> VELOCIDAD DESCARGA: ${testResults.download} Mbps\n`;
+            content += `--> VELOCIDAD SUBIDA:   ${testResults.upload} Mbps\n`;
+            content += `--> LATENCIA MEDIA:     ${testResults.ping} ms\n`;
+            content += `--> JITTER (Fluctuacion):${testResults.jitter} ms\n`;
+            content += `----------------------------------------\n`;
+            content += `DETALLE DE ENRUTAMIENTO (Pings Simulados)\n`;
+            for (const [server, ms] of Object.entries(testResults.serverComparative)) {
+                content += `- ${server}: ${ms > 0 ? ms + ' ms' : 'Fallo'}\n`;
+            }
+            content += `\nGenerado por VelocityMonitor (Local Tool).`;
+
+            // Crear el archivo Blob y forzar descarga
+            const blob = new window.Blob([content], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = window.URL.createObjectURL(blob);
+            a.download = `Test_Velocidad_${testResults.isp.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
     </script>
 </body>
+
 </html>
